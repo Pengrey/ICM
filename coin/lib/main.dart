@@ -88,92 +88,110 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       transactions(
         date: 1,
         spent: 45,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 2,
         spent: 3,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 3,
         spent: 4,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 4,
         spent: 3,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 5,
         spent: 10,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 6,
         spent: 3,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 7,
         spent: 11,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 8,
         spent: 3,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 9,
         spent: 30,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 10,
         spent: 1,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 11,
         spent: 3,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 12,
         spent: 0,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 13,
         spent: 6,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 14,
         spent: 2,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 15,
         spent: 10,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 16,
         spent: 0,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 17,
         spent: 9,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 18,
         spent: 4,
-        barColor: charts.ColorUtil.fromDartColor(Color.fromARGB(255, 0, 0, 0)),
+        barColor:
+            charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
     ];
 
@@ -217,7 +235,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
         onTap: _onItemTapped,
       ),
     );
