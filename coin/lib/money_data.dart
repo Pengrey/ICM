@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+
+class MoneyData {
+  static final getData = [
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+    {
+      'name': 'Bitcoin',
+      'symbol': 'BTC',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.green,
+      'change': '+3.67%',
+      'changeValue': '+202.835',
+      'changeColor': Colors.green,
+      'value': '\$12.279',
+    },
+    {
+      'name': 'Ethereum',
+      'symbol': 'ETH',
+      'icon': Icons.attach_money,
+      'iconColor': Colors.black,
+      'change': '+5.2%',
+      'changeValue': '25.567',
+      'changeColor': Colors.green,
+      'value': '\$7.809'
+    },
+  ];
+}

@@ -1,6 +1,10 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:coin/transactions.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+
+import 'money_data.dart';
 
 void main() => runApp(const MyApp());
 
@@ -30,15 +34,84 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     Scaffold(
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-        height: 220,
-        width: double.maxFinite,
-        child: const Card(
-          elevation: 5,
+        body: Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+// scrollDirection: Axis.horizontal,
+              itemCount: MoneyData.getData.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  height: 220,
+                  width: double.maxFinite,
+                  child: Card(
+                    elevation: 5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                              width: 2.0,
+                              color: changeColor(MoneyData.getData[index])),
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(7),
+                        child: Stack(children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Stack(
+                              children: <Widget>[
+                                Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 10, top: 5),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            cryptoIcon(
+                                                MoneyData.getData[index]),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            cryptoNameSymbol(
+                                                MoneyData.getData[index]),
+                                            const Spacer(),
+                                            cryptoChange(
+                                                MoneyData.getData[index]),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            changeIcon(
+                                                MoneyData.getData[index]),
+                                            const SizedBox(
+                                              width: 20,
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            cryptoAmount(
+                                                MoneyData.getData[index])
+                                          ],
+                                        )
+                                      ],
+                                    ))
+                              ],
+                            ),
+                          )
+                        ]),
+                      ),
+                    ),
+                  ),
+                );
+              }),
         ),
-      ),
-    ),
+      ],
+    )),
     Form(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,13 +147,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ],
       ),
     ),
-    charts.LineChart(series,
-        domainAxis: const charts.NumericAxisSpec(
-          tickProviderSpec:
-              charts.BasicNumericTickProviderSpec(zeroBound: false),
-          viewport: charts.NumericExtents(1.0, 31.0),
-        ),
-        animate: true),
+    Container(
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 40.0),
+      height: 500,
+      width: double.maxFinite,
+      child: Card(
+        elevation: 5,
+        child: charts.LineChart(series,
+            domainAxis: const charts.NumericAxisSpec(
+              tickProviderSpec:
+                  charts.BasicNumericTickProviderSpec(zeroBound: false),
+              viewport: charts.NumericExtents(1.0, 31.0),
+            ),
+            animate: true),
+      ),
+    ),
   ];
 
   static get series {
@@ -237,6 +318,113 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         currentIndex: _selectedIndex,
         selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
         onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  static Widget cryptoIcon(data) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: Align(
+          alignment: Alignment.centerLeft,
+          child: Icon(
+            data['icon'],
+            color: data['iconColor'],
+            size: 40,
+          )),
+    );
+  }
+
+  static Widget cryptoNameSymbol(data) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RichText(
+        text: TextSpan(
+          text: '${data['name']}',
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+          children: <TextSpan>[
+            TextSpan(
+                text: '\n${data['symbol']}',
+                style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget cryptoChange(data) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: RichText(
+        text: TextSpan(
+          text: '${data['change']}',
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.green, fontSize: 20),
+          children: <TextSpan>[
+            TextSpan(
+                text: '\n${data['changeValue']}',
+                style: TextStyle(
+                    color: data['changeColor'],
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget changeIcon(data) {
+    return Align(
+        alignment: Alignment.topRight,
+        child: data['change'].contains('-')
+            ? Icon(
+                Icons.arrow_downward,
+                color: data['changeColor'],
+                size: 30,
+              )
+            : Icon(
+                Icons.arrow_upward,
+                color: data['changeColor'],
+                size: 30,
+              ));
+  }
+
+  static Color changeColor(data) {
+    return data['change'].contains('-') ? Colors.red : Colors.green;
+  }
+
+  static Widget cryptoAmount(data) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Row(
+          children: <Widget>[
+            RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                text: '\n${data['value']}',
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 35,
+                ),
+                children: const <TextSpan>[
+                  TextSpan(
+                      text: '\n0.1349',
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
