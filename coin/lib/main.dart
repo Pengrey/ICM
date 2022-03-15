@@ -54,7 +54,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         border: Border(
                           top: BorderSide(
                               width: 2.0,
-                              color: changeColor(MoneyData.getData[index])),
+                              color: getChangeColor(MoneyData.getData[index])),
                         ),
                         color: Colors.white,
                       ),
@@ -72,19 +72,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       children: <Widget>[
                                         Row(
                                           children: <Widget>[
-                                            cryptoIcon(
+                                            expenseTypeIcon(
                                                 MoneyData.getData[index]),
                                             const SizedBox(
                                               height: 10,
                                             ),
-                                            cryptoNameSymbol(
-                                                MoneyData.getData[index]),
-                                            const Spacer(),
-                                            cryptoChange(
+                                            expenseName(
                                                 MoneyData.getData[index]),
                                             const SizedBox(
                                               width: 10,
                                             ),
+                                            const Spacer(),
                                             changeIcon(
                                                 MoneyData.getData[index]),
                                             const SizedBox(
@@ -94,7 +92,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         ),
                                         Row(
                                           children: <Widget>[
-                                            cryptoAmount(
+                                            transactionAmount(
                                                 MoneyData.getData[index])
                                           ],
                                         )
@@ -168,109 +166,109 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     final List<transactions> data = [
       transactions(
         date: 1,
-        spent: 45,
+        money: 45,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 2,
-        spent: 3,
+        money: 3,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 3,
-        spent: 4,
+        money: 4,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 4,
-        spent: 3,
+        money: 3,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 5,
-        spent: 10,
+        money: 10,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 6,
-        spent: 3,
+        money: 3,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 7,
-        spent: 11,
+        money: 11,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 8,
-        spent: 3,
+        money: 3,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 9,
-        spent: 30,
+        money: 30,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 10,
-        spent: 1,
+        money: 1,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 11,
-        spent: 3,
+        money: 3,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 12,
-        spent: 0,
+        money: 0,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 13,
-        spent: 6,
+        money: 6,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 14,
-        spent: 2,
+        money: 2,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 15,
-        spent: 10,
+        money: 10,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 16,
-        spent: 0,
+        money: 0,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 17,
-        spent: 9,
+        money: 9,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
       transactions(
         date: 18,
-        spent: 4,
+        money: 4,
         barColor:
             charts.ColorUtil.fromDartColor(const Color.fromARGB(255, 0, 0, 0)),
       ),
@@ -281,7 +279,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           id: "developers",
           data: data,
           domainFn: (transactions series, _) => series.date,
-          measureFn: (transactions series, _) => series.spent,
+          measureFn: (transactions series, _) => series.money,
           colorFn: (transactions series, _) => series.barColor)
     ];
 
@@ -322,7 +320,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 
-  static Widget cryptoIcon(data) {
+  static Widget expenseTypeIcon(data) {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
       child: Align(
@@ -335,7 +333,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 
-  static Widget cryptoNameSymbol(data) {
+  static Widget expenseName(data) {
     return Align(
       alignment: Alignment.centerLeft,
       child: RichText(
@@ -345,30 +343,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
           children: <TextSpan>[
             TextSpan(
-                text: '\n${data['symbol']}',
+                text: '\n${data['time']}',
                 style: const TextStyle(
                     color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Widget cryptoChange(data) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: RichText(
-        text: TextSpan(
-          text: '${data['change']}',
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.green, fontSize: 20),
-          children: <TextSpan>[
-            TextSpan(
-                text: '\n${data['changeValue']}',
-                style: TextStyle(
-                    color: data['changeColor'],
                     fontSize: 15,
                     fontWeight: FontWeight.bold)),
           ],
@@ -380,7 +357,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static Widget changeIcon(data) {
     return Align(
         alignment: Alignment.topRight,
-        child: data['change'].contains('-')
+        child: data['changeColor'] == Colors.red
             ? Icon(
                 Icons.arrow_downward,
                 color: data['changeColor'],
@@ -393,11 +370,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ));
   }
 
-  static Color changeColor(data) {
-    return data['change'].contains('-') ? Colors.red : Colors.green;
+  static Color getChangeColor(data) {
+    return data['changeColor'];
   }
 
-  static Widget cryptoAmount(data) {
+  static Widget transactionAmount(data) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
@@ -412,15 +389,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   color: Colors.grey,
                   fontSize: 35,
                 ),
-                children: const <TextSpan>[
-                  TextSpan(
-                      text: '\n0.1349',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                ],
               ),
             ),
           ],
