@@ -3,6 +3,7 @@
 import 'package:coin/transactions.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 import 'money_data.dart';
 import 'transactions_data.dart';
@@ -112,38 +113,93 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ],
     )),
     Form(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              hintText: 'Enter your name',
-              labelText: 'Name',
+      child: Scrollbar(
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Card(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ...[
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          filled: true,
+                          hintText: 'Enter a title...',
+                          labelText: 'Title',
+                        ),
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          hintText: 'Enter a description...',
+                          labelText: 'Description',
+                        ),
+                        onChanged: (value) {
+                          var description = value;
+                        },
+                        maxLines: 5,
+                      ),
+                      _FormDatePicker(
+                        date: date,
+                        onChanged: (DateTime value) {},
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
+                                'Estimated value',
+                              ),
+                            ],
+                          ),
+                          Text(
+                            intl.NumberFormat.currency(
+                                    symbol: "\$", decimalDigits: 0)
+                                .format(maxValue),
+                          ),
+                          Slider(
+                            min: 0,
+                            max: 500,
+                            divisions: 500,
+                            value: maxValue,
+                            onChanged: (double value) {},
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Enable feature'),
+                          Switch(
+                            value: enableFeature,
+                            onChanged: (bool value) {},
+                          ),
+                        ],
+                      ),
+                    ].expand(
+                      (widget) => [
+                        widget,
+                        const SizedBox(
+                          height: 24,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.phone),
-              hintText: 'Enter a phone number',
-              labelText: 'Phone',
-            ),
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.calendar_today),
-              hintText: 'Enter your date of birth',
-              labelText: 'Dob',
-            ),
-          ),
-          Container(
-              padding: const EdgeInsets.only(left: 150.0, top: 40.0),
-              // ignore: deprecated_member_use
-              child: const RaisedButton(
-                child: Text('Submit'),
-                onPressed: null,
-              )),
-        ],
+        ),
       ),
     ),
     Container(
@@ -163,6 +219,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     ),
   ];
 
+  static var maxValue = 0.0;
+
+  static var enableFeature = false;
+
   static get series {
     final List<transactions> data = TransactionsData.getData;
 
@@ -177,6 +237,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     return series;
   }
+
+  static get date => DateTime.now();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -286,6 +348,63 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FormDatePicker extends StatefulWidget {
+  final DateTime date;
+  final ValueChanged<DateTime> onChanged;
+
+  const _FormDatePicker({
+    required this.date,
+    required this.onChanged,
+  });
+
+  @override
+  _FormDatePickerState createState() => _FormDatePickerState();
+}
+
+class _FormDatePickerState extends State<_FormDatePicker> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              'Date',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Text(
+              intl.DateFormat.yMd().format(widget.date),
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ],
+        ),
+        TextButton(
+          child: const Text('Edit'),
+          onPressed: () async {
+            var newDate = await showDatePicker(
+              context: context,
+              initialDate: widget.date,
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+            );
+
+            // Don't change the date if the date picker returns null.
+            if (newDate == null) {
+              return;
+            }
+
+            widget.onChanged(newDate);
+          },
+        )
+      ],
     );
   }
 }
