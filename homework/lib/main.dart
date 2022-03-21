@@ -3,6 +3,7 @@ import 'package:homework/money_data.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:homework/transactions.dart';
 import 'package:homework/transactions_data.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,12 +75,97 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AddTransactionPage extends StatelessWidget {
-  const AddTransactionPage({Key? key}) : super(key: key);
+  AddTransactionPage({Key? key}) : super(key: key);
+
+  var data;
+  bool autoValidate = true;
+  bool readOnly = false;
+  bool showSegmentedControl = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FormBuilder(
+                initialValue: {
+                  'date': DateTime.now(),
+                  'accept_terms': false,
+                },
+                autovalidateMode: AutovalidateMode.always,
+                child: Column(children: [
+                  FormBuilderTextField(
+                    name: 'text',
+                    decoration:
+                        const InputDecoration(labelText: "Transaction Name"),
+                  ),
+                  FormBuilderDateTimePicker(
+                    name: "date",
+                    inputType: InputType.date,
+                    decoration:
+                        const InputDecoration(labelText: "Date of Transaction"),
+                  ),
+                  FormBuilderDropdown(
+                    name: "transactionType",
+                    decoration:
+                        const InputDecoration(labelText: "Type of Transaction"),
+                    // initialValue: 'Male',
+                    hint: const Text('Select Type of Transaction'),
+                    items: ['Food', 'Work', 'Entertainment', 'Other']
+                        .map((types) =>
+                            DropdownMenuItem(value: types, child: Text(types)))
+                        .toList(),
+                  ),
+                  FormBuilderTextField(
+                    name: "money",
+                    decoration: const InputDecoration(labelText: "Price"),
+                    keyboardType: TextInputType.number,
+                  )
+                ]),
+              ),
+              FormBuilderSlider(
+                name: "slider",
+                min: 0.0,
+                max: 20.0,
+                initialValue: 1.0,
+                divisions: 20,
+                decoration: InputDecoration(labelText: "Number of items"),
+              ),
+              FormBuilderSegmentedControl(
+                decoration: const InputDecoration(
+                  labelText: "Rating",
+                ),
+                name: "movie_rating",
+                options: List.generate(5, (i) => i + 1)
+                    .map((number) => FormBuilderFieldOption(value: number))
+                    .toList(),
+              ),
+              FormBuilderRadioGroup(
+                decoration: const InputDecoration(
+                  labelText: "Flow of transaction",
+                ),
+                name: "transactionsDirections",
+                initialValue: const ["Purchase"],
+                options: const [
+                  FormBuilderFieldOption(value: "Purchase"),
+                  FormBuilderFieldOption(value: "Received"),
+                  FormBuilderFieldOption(value: "Other")
+                ],
+              ),
+              FormBuilderCheckbox(
+                name: 'Hide from history',
+                title: const Text(
+                  "Hide from history",
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'uniqueTag',
         label: Row(
