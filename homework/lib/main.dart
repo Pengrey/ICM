@@ -77,7 +77,6 @@ class _HomePageState extends State<HomePage> {
 class AddTransactionPage extends StatelessWidget {
   AddTransactionPage({Key? key}) : super(key: key);
 
-  var data;
   bool autoValidate = true;
   bool readOnly = false;
   bool showSegmentedControl = true;
@@ -133,7 +132,7 @@ class AddTransactionPage extends StatelessWidget {
                 max: 20.0,
                 initialValue: 1.0,
                 divisions: 20,
-                decoration: InputDecoration(labelText: "Number of items"),
+                decoration: const InputDecoration(labelText: "Number of items"),
               ),
               FormBuilderSegmentedControl(
                 decoration: const InputDecoration(
