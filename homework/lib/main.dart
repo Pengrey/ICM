@@ -34,12 +34,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
   void _addTransaction() {
-    setState(() {
-      _counter++;
-    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddTransactionPage(),
+        ));
   }
 
   @override
@@ -63,10 +63,31 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'uniqueTag',
           onPressed: _addTransaction,
           tooltip: 'Increment',
           child: const Icon(Icons.add),
         ), //
+      ),
+    );
+  }
+}
+
+class AddTransactionPage extends StatelessWidget {
+  const AddTransactionPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'uniqueTag',
+        label: Row(
+          children: const [Icon(Icons.save), Text('Save')],
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }
