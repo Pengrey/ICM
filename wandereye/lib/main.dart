@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+List<Map<String, dynamic>> localChallengeList = [
+  {
+    "token": "12345",
+    "image_url":
+        "https://s2.glbimg.com/6VyBKVon5j6Ofdc70Yt9c1FTlvk=/0x0:695x521/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/9/Q/4z9FL4T1G7MKHrl1AYpg/2014-04-11-bliss.jpg"
+  },
+  {
+    "token": "45678",
+    "image_url":
+        "https://staticg.sportskeeda.com/editor/2022/02/45fd5-16457369574775-1920.jpg"
+  },
+  {
+    "token": "90000",
+    "image_url":
+        "https://curatedmint.com/wp-content/uploads/2021/07/warframe-fortuna-720x720.jpg"
+  }
+];
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -47,8 +66,47 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+Widget pictureCard(context, idx) {
+  return Column(
+    children: [
+      Container(
+        padding: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.9),
+            spreadRadius: 0.5,
+            blurRadius: 5,
+            offset: Offset(0, 6),
+          ),
+        ], borderRadius: BorderRadius.circular(30)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            height: 400,
+            width: 400,
+            child: Image(
+              fit: BoxFit.cover,
+              image: NetworkImage(localChallengeList[idx]['image_url']),
+            ),
+          ),
+        ),
+      ),
+      SizedBox(height: 10)
+    ],
+  );
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _bottomNavIndex = 0;
+  List<IconData> bottom_navbarIcons = [
+    Icons.home_rounded,
+    Icons.sync_alt_rounded,
+    //Icons.add_rounded,
+    Icons.emoji_events_rounded,
+    Icons.settings_rounded,
+  ];
 
   void _incrementCounter() {
     setState(() {
@@ -65,7 +123,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
-    //
+    List<Widget> _mainBodyOptions = [
+      ListView(
+          padding: const EdgeInsets.only(left: 50, right: 50),
+          children: List<Widget>.generate(localChallengeList.length,
+              (index) => pictureCard(context, index))),
+      Container(),
+      Container(),
+      Container(),
+      Container()
+    ];
+
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
@@ -78,38 +146,24 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+        child: _mainBodyOptions.elementAt(_bottomNavIndex),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        //params
+        child: const Icon(Icons.add_rounded),
+        onPressed: (() => {_bottomNavIndex = 5}),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: bottom_navbarIcons,
+        activeIndex: _bottomNavIndex,
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.verySmoothEdge,
+        leftCornerRadius: 32,
+        rightCornerRadius: 32,
+        onTap: (index) => setState(() => _bottomNavIndex = index),
+        //other params
+      ),
     );
   }
 }
