@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:badges/badges.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+int _notifications = 1;
 List<Map<String, dynamic>> localChallengeList = [
   {
     "token": "12345",
     "image_url":
-        "https://s2.glbimg.com/6VyBKVon5j6Ofdc70Yt9c1FTlvk=/0x0:695x521/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/9/Q/4z9FL4T1G7MKHrl1AYpg/2014-04-11-bliss.jpg"
+        "https://s2.glbimg.com/6VyBKVon5j6Ofdc70Yt9c1FTlvk=/0x0:695x521/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/9/Q/4z9FL4T1G7MKHrl1AYpg/2014-04-11-bliss.jpg",
+    "hint": "Try Jumping.",
   },
   {
     "token": "45678",
     "image_url":
-        "https://staticg.sportskeeda.com/editor/2022/02/45fd5-16457369574775-1920.jpg"
+        "https://staticg.sportskeeda.com/editor/2022/02/45fd5-16457369574775-1920.jpg",
+    "hint": "Behold, dog!",
   },
   {
     "token": "90000",
     "image_url":
-        "https://curatedmint.com/wp-content/uploads/2021/07/warframe-fortuna-720x720.jpg"
+        "https://curatedmint.com/wp-content/uploads/2021/07/warframe-fortuna-720x720.jpg",
+    "hint": "Secret wall ahead.",
   }
 ];
 
@@ -48,15 +53,86 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class OpenChallenge extends StatelessWidget {
+bool _clicked = false;
+
+class OpenChallenge extends StatefulWidget {
   const OpenChallenge({Key? key, required this.idx}) : super(key: key);
 
   final int idx;
 
   @override
+  State<OpenChallenge> createState() => _OpenChallengeState();
+}
+
+TextStyle hintTextStyle = const TextStyle();
+
+class _OpenChallengeState extends State<OpenChallenge> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(localChallengeList[idx]['token'])),
+      appBar: AppBar(title: Text(localChallengeList[widget.idx]['token'])),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.9),
+                spreadRadius: 0.5,
+                blurRadius: 5,
+                offset: const Offset(0, 6),
+              ),
+            ], borderRadius: BorderRadius.circular(30)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              clipBehavior: Clip.hardEdge,
+              child: SizedBox(
+                height: 400,
+                width: 400,
+                child: Image(
+                  fit: BoxFit.cover,
+                  image:
+                      NetworkImage(localChallengeList[widget.idx]['image_url']),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                "Hint:",
+                textAlign: TextAlign.start,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 100,
+              width: double.infinity,
+              child: Container(
+                color: const Color.fromARGB(76, 0, 0, 0),
+                child: InkWell(
+                  onTap: (() {
+                    setState(() {
+                      _clicked = !_clicked;
+                    });
+                  }),
+                  child: Center(
+                    child: _clicked
+                        ? Text(
+                            localChallengeList[widget.idx]['hint'],
+                          )
+                        : const Text("Click to show hint"),
+                  ),
+                ),
+              ),
+            ),
+          ])
+        ],
+      ),
     );
   }
 }
@@ -90,13 +166,13 @@ Widget pictureCard(context, idx) {
     child: Column(
       children: [
         Container(
-          padding: EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.9),
               spreadRadius: 0.5,
               blurRadius: 5,
-              offset: Offset(0, 6),
+              offset: const Offset(0, 6),
             ),
           ], borderRadius: BorderRadius.circular(30)),
           child: ClipRRect(
@@ -112,14 +188,13 @@ Widget pictureCard(context, idx) {
             ),
           ),
         ),
-        SizedBox(height: 10)
+        const SizedBox(height: 10)
       ],
     ),
   );
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _bottomNavIndex = 0;
   List<IconData> bottom_navbarIcons = [
     Icons.home_rounded,
@@ -129,26 +204,52 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.settings_rounded,
   ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     List<Widget> _mainBodyOptions = [
-      ListView(
-          padding: const EdgeInsets.only(left: 50, right: 50),
-          children: List<Widget>.generate(localChallengeList.length,
-              (index) => pictureCard(context, index))),
+      Container(
+        child: Column(children: [
+          const SizedBox(height: 70),
+          SizedBox(
+            child: Row(children: [
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              Badge(
+                badgeContent: Text(_notifications.toString()),
+                position: BadgePosition.topEnd(top: -1, end: -1),
+                child: OutlinedButton(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)))),
+                    onPressed: () => {},
+                    child: const Icon(Icons.message_outlined)),
+              ),
+              const Spacer()
+            ]),
+          ),
+          Expanded(
+            child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 50, right: 50),
+                children: List<Widget>.generate(localChallengeList.length,
+                    (index) => pictureCard(context, index))),
+          ),
+        ]),
+      ),
       Container(),
       Container(),
       Container(),
@@ -159,11 +260,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
