@@ -48,6 +48,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class OpenChallenge extends StatelessWidget {
+  const OpenChallenge({Key? key, required this.idx}) : super(key: key);
+
+  final int idx;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(localChallengeList[idx]['token'])),
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -67,33 +80,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 Widget pictureCard(context, idx) {
-  return Column(
-    children: [
-      Container(
-        padding: EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.9),
-            spreadRadius: 0.5,
-            blurRadius: 5,
-            offset: Offset(0, 6),
-          ),
-        ], borderRadius: BorderRadius.circular(30)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          clipBehavior: Clip.hardEdge,
-          child: SizedBox(
-            height: 400,
-            width: 400,
-            child: Image(
-              fit: BoxFit.cover,
-              image: NetworkImage(localChallengeList[idx]['image_url']),
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => OpenChallenge(idx: idx)),
+      );
+    },
+    child: Column(
+      children: [
+        Container(
+          padding: EdgeInsets.only(top: 10),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.9),
+              spreadRadius: 0.5,
+              blurRadius: 5,
+              offset: Offset(0, 6),
+            ),
+          ], borderRadius: BorderRadius.circular(30)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            clipBehavior: Clip.hardEdge,
+            child: SizedBox(
+              height: 400,
+              width: 400,
+              child: Image(
+                fit: BoxFit.cover,
+                image: NetworkImage(localChallengeList[idx]['image_url']),
+              ),
             ),
           ),
         ),
-      ),
-      SizedBox(height: 10)
-    ],
+        SizedBox(height: 10)
+      ],
+    ),
   );
 }
 
