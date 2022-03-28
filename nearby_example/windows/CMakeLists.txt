@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(nearby_example LANGUAGES CXX)
+project(nearby_example_2 LANGUAGES CXX)
 
-set(BINARY_NAME "nearby_example")
+set(BINARY_NAME "nearby_example_2")
 
 cmake_policy(SET CMP0063 NEW)
 

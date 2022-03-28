@@ -1,6 +1,6 @@
 {
-    "name": "nearby_example",
-    "short_name": "nearby_example",
+    "name": "nearby_example_2",
+    "short_name": "nearby_example_2",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
