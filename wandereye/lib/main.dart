@@ -275,7 +275,7 @@ class Body extends StatefulWidget {
 }
 
 class _MyBodyState extends State<Body> {
-  final String userName = Random().nextInt(10000).toString();
+  final String userName = Random().nextInt(10000).toString(); // TODO
   final Strategy strategy = Strategy.P2P_STAR;
   Map<String, ConnectionInfo> endpointMap = {};
 
@@ -288,47 +288,6 @@ class _MyBodyState extends State<Body> {
         MaterialPageRoute(
           builder: (context) => const Debug(),
         ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _debugPage,
-        label: const Text('Debug'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            "Nearby share",
-          ),
-          const Image(image: AssetImage('assets/nearbySharing.png')),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              ElevatedButton.icon(
-                  icon: const Icon(
-                    Icons.upload,
-                  ),
-                  label: const Text("Send"),
-                  onPressed: () {
-                    prePermitions();
-                  }),
-              ElevatedButton.icon(
-                  icon: const Icon(
-                    Icons.download,
-                  ),
-                  label: const Text("Receive"),
-                  onPressed: () {
-                    prePermitions();
-                  }),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 
   void showSnackbar(dynamic a) {
@@ -367,6 +326,145 @@ class _MyBodyState extends State<Body> {
     if (!await Nearby().checkBluetoothPermission()) {
       Nearby().askBluetoothPermission();
     }
+  }
+
+  void onConnectionInit(String id, ConnectionInfo info) {
+    endpointMap[id] = info;
+    Nearby().acceptConnection(id, onPayLoadRecieved: (endid, payload) async {
+      if (payload.type == PayloadType.BYTES) {
+        String str = String.fromCharCodes(payload.bytes!);
+        showSnackbar("New challenge: " + str);
+      } else {
+        showSnackbar("Format ERROR");
+      }
+    });
+  }
+
+  sendChallenge() async {
+    // Start Advertising
+    try {
+      bool a = await Nearby().startAdvertising(
+        userName,
+        strategy,
+        onConnectionInitiated: onConnectionInit,
+        onConnectionResult: (id, status) {
+          showSnackbar(status);
+
+          // Send challenge
+          endpointMap.forEach((key, value) {
+            showSnackbar(
+                "Sending $userName to ${value.endpointName}, id: $key");
+            Nearby()
+                .sendBytesPayload(key, Uint8List.fromList(userName.codeUnits));
+
+            // Stop Advertising
+            Nearby().stopAdvertising();
+            showSnackbar("ADVERTISING: false");
+
+            // Clear connections
+            Nearby().stopAllEndpoints();
+          });
+        },
+        onDisconnected: (id) {
+          showSnackbar(
+              "Disconnected: ${endpointMap[id]!.endpointName}, id $id");
+          setState(() {
+            endpointMap.remove(id);
+          });
+        },
+      );
+      showSnackbar("ADVERTISING: " + a.toString());
+    } catch (exception) {
+      showSnackbar(exception);
+    }
+  }
+
+  receiveChallenge() async {
+    try {
+      bool a = await Nearby().startDiscovery(
+        userName,
+        strategy,
+
+        // On connection found
+        onEndpointFound: (id, name, serviceId) {
+          // Automatically accept the request connection
+          Nearby().requestConnection(
+            userName,
+            id,
+            onConnectionInitiated: (id, info) {
+              onConnectionInit(id, info);
+            },
+            onConnectionResult: (id, status) {
+              showSnackbar(status);
+
+              // Stop Discovery
+              Nearby().stopDiscovery();
+              showSnackbar("DISCOVERY: false");
+
+              // Clear connections
+              Nearby().stopAllEndpoints();
+            },
+            onDisconnected: (id) {
+              setState(() {
+                endpointMap.remove(id);
+              });
+              showSnackbar(
+                  "Disconnected from: ${endpointMap[id]!.endpointName}, id $id");
+            },
+          );
+        },
+        onEndpointLost: (id) {
+          showSnackbar(
+              "Lost discovered Endpoint: ${endpointMap[id]!.endpointName}, id $id");
+        },
+      );
+      showSnackbar("DISCOVERING: " + a.toString());
+    } catch (e) {
+      showSnackbar(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _debugPage,
+        label: const Text('Debug'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Text(
+            "Nearby share",
+          ),
+          const Image(image: AssetImage('assets/nearbySharing.png')),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.upload,
+                  ),
+                  label: const Text("Send"),
+                  onPressed: () {
+                    prePermitions();
+                    sendChallenge();
+                  }),
+              ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.download,
+                  ),
+                  label: const Text("Receive"),
+                  onPressed: () {
+                    prePermitions();
+                    receiveChallenge();
+                  }),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
