@@ -304,16 +304,23 @@ class _MyBodyState extends State<Body> {
           const Text(
             "Nearby share",
           ),
+          const Image(image: AssetImage('assets/nearbySharing.png')),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              ElevatedButton(
-                  child: const Text("Upload"),
+              ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.upload,
+                  ),
+                  label: const Text("Send"),
                   onPressed: () {
                     prePermitions();
                   }),
-              ElevatedButton(
-                  child: const Text("Download"),
+              ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.download,
+                  ),
+                  label: const Text("Receive"),
                   onPressed: () {
                     prePermitions();
                   }),
