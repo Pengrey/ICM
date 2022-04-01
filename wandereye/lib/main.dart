@@ -157,24 +157,28 @@ Widget CreateChallengeScreen(context) {
     cameras = availableCameras;
     camera = cameras.first;
   });
+  String imagePath;
 
   return Scaffold(
+      appBar: AppBar(
+        title: Text("Create a challenge"),
+      ),
       body: ListView(
-    children: [
-      ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TakePictureScreen(
-                  camera: camera,
-                ),
-              ),
-            );
-          },
-          child: Text("Pic!"))
-    ],
-  ));
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TakePictureScreen(
+                      camera: camera,
+                    ),
+                  ),
+                );
+              },
+              child: Text("Pic!"))
+        ],
+      ));
 }
 
 Widget pictureCard(context, idx) {
@@ -222,7 +226,6 @@ class TakePictureScreen extends StatefulWidget {
     Key? key,
     required this.camera,
   }) : super(key: key);
-
   final CameraDescription camera;
 
   @override
