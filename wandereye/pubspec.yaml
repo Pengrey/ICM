@@ -41,6 +41,8 @@ dependencies:
   image_picker: ^0.8.4+11
   camera:
   path: 
+  shared_preferences: ^2.0.13
+  geolocator:
 
 dev_dependencies:
   flutter_test:

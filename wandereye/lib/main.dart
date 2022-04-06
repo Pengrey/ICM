@@ -4,6 +4,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:badges/badges.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 // nearby sync
 import 'package:image_picker/image_picker.dart';
@@ -12,15 +15,10 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:math';
 import 'dart:typed_data';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final camera = cameras.first;
-  runApp(const MyApp());
-}
+late SharedPreferences localData;
+late List<Map<String, dynamic>> localChallengeList;
 
-int _notifications = 1;
-List<Map<String, dynamic>> localChallengeList = [
+List<Map<String, dynamic>> test_localChallengeList = [
   {
     "token": "12345",
     "image_url":
@@ -40,6 +38,78 @@ List<Map<String, dynamic>> localChallengeList = [
     "hint": "Secret wall ahead.",
   }
 ];
+
+List<String> listMapToJsonList(List<Map<String, dynamic>> input) {
+  List<String> tmp = [];
+  for (Map<String, dynamic> it in input) {
+    tmp.add(json.encode(it));
+  }
+
+  return tmp;
+}
+
+List<Map<String, dynamic>> jsonListToListMap(List<String> input) {
+  List<Map<String, dynamic>> tmp = [];
+  for (String it in input) {
+    tmp.add(json.decode(it));
+  }
+
+  return tmp;
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  localData = await SharedPreferences.getInstance();
+
+  //for testing only
+  List<String> encodedList = listMapToJsonList(test_localChallengeList);
+  await localData.setStringList('challenges', encodedList);
+  //actual things
+  final cameras = await availableCameras();
+  final camera = cameras.first;
+
+  if (localData.containsKey('challenges')) {
+    List<String>? tmp = await localData.getStringList('challenges');
+    localChallengeList = jsonListToListMap(tmp!);
+  } else {
+    localChallengeList = [{}];
+  }
+  print("LOADED");
+  runApp(const MyApp());
+}
+
+/*
+
+List<List<String>> localChallengeList = [
+  [
+    "12345", //id
+    "https://s2.glbimg.com/6VyBKVon5j6Ofdc70Yt9c1FTlvk=/0x0:695x521/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/9/Q/4z9FL4T1G7MKHrl1AYpg/2014-04-11-bliss.jpg",
+    "Try Jumping.", // hint
+    "12345", // timestamp
+    "123455", // latitude,
+    "12345" //longitude
+  ],
+  [
+    "45678",
+    "https://staticg.sportskeeda.com/editor/2022/02/45fd5-16457369574775-1920.jpg",
+    "Behold, dog!",
+    "1234",
+    "1234",
+    "1234"
+  ],
+  [
+    "90000",
+    "https://curatedmint.com/wp-content/uploads/2021/07/warframe-fortuna-720x720.jpg",
+    "Secret wall ahead.",
+    "1234",
+    "1234",
+    "1234"
+  ]
+];
+
+*/
+int _notifications = 1;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -181,45 +251,6 @@ Widget CreateChallengeScreen(context) {
       ));
 }
 
-Widget pictureCard(context, idx) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OpenChallenge(idx: idx)),
-      );
-    },
-    child: Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(top: 10),
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.9),
-              spreadRadius: 0.5,
-              blurRadius: 5,
-              offset: const Offset(0, 6),
-            ),
-          ], borderRadius: BorderRadius.circular(30)),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            clipBehavior: Clip.hardEdge,
-            child: SizedBox(
-              height: 400,
-              width: 400,
-              child: Image(
-                fit: BoxFit.cover,
-                image: NetworkImage(localChallengeList[idx]['image_url']),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10)
-      ],
-    ),
-  );
-}
-
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -290,6 +321,28 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // Attempt to take a picture and get the file `image`
             // where it was saved.
             final image = await _controller.takePicture();
+            Position position = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            final prefs = await SharedPreferences.getInstance();
+            final loc = await Geolocator.getCurrentPosition();
+            if (position == null || image == null) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Couldn't obtain location/picture :(")));
+            } else {
+              List<String> myChallData = [
+                image.path,
+                (DateTime.now().toUtc().millisecondsSinceEpoch / 1000)
+                    .toString(),
+                loc.toString()
+              ];
+
+              await prefs.setStringList('localChal', myChallData);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(myChallData.toString()),
+                ),
+              );
+            }
 
             // If the picture was taken, display it on a new screen.
             await Navigator.of(context).push(
@@ -331,6 +384,45 @@ class DisplayPictureScreen extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Widget pictureCard(context, idx) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OpenChallenge(idx: idx)),
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.9),
+                spreadRadius: 0.5,
+                blurRadius: 5,
+                offset: const Offset(0, 6),
+              ),
+            ], borderRadius: BorderRadius.circular(30)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              clipBehavior: Clip.hardEdge,
+              child: SizedBox(
+                height: 400,
+                width: 400,
+                child: Image(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(localChallengeList[idx]['image_url']),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10)
+        ],
+      ),
+    );
+  }
+
   int _bottomNavIndex = 0;
   List<IconData> bottom_navbarIcons = [
     Icons.home_rounded,
@@ -401,6 +493,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     ];
+
     return Scaffold(
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -408,6 +501,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _mainBodyOptions.elementAt(_bottomNavIndex),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "chalBut",
         //params
         child: const Icon(Icons.add_rounded),
         onPressed: () {
