@@ -42,7 +42,7 @@ dependencies:
   camera:
   path: 
   shared_preferences: ^2.0.13
-  geolocator:
+  geolocator: ^8.2.0
 
 dev_dependencies:
   flutter_test:
