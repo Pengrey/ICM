@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -518,6 +519,50 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // Location stuff
+  final StreamController<Position> _locStream = StreamController();
+  late StreamSubscription<Position> locationSubscription;
+  Position? lastPosition;
+
+  void showSnackbar(dynamic a) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(a.toString()),
+    ));
+  }
+
+  startLocation() {
+    final positionStream =
+        Geolocator.getPositionStream().handleError((error) {});
+    locationSubscription = positionStream.listen((Position position) {
+      _locStream.sink.add(position);
+
+      // Show first position
+      lastPosition ??= position;
+
+      // Show position if changed
+      if (lastPosition?.latitude != position.latitude ||
+          lastPosition?.longitude != position.longitude) {
+        lastPosition = position;
+        showSnackbar(
+            "Position changed to: ${position.toString()}"); // TODO comment this to stop snackbar spam
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    GeolocatorPlatform.instance.requestPermission();
+    startLocation();
+  }
+
+  @override
+  void dispose() {
+    _locStream.close();
+    locationSubscription.cancel();
+    super.dispose();
+  }
+
   int _bottomNavIndex = 0;
   List<IconData> bottom_navbarIcons = [
     Icons.home_rounded,
@@ -552,7 +597,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => {},
             child: const Icon(Icons.message_outlined),
             mini: true,
-            shape: ContinuousRectangleBorder(
+            shape: const ContinuousRectangleBorder(
                 side: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(18))),
           ),
@@ -835,6 +880,8 @@ class _MyBodyState extends State<Body> {
     );
   }
 }
+
+// DEBUG stuff to clean later
 
 class Debug extends StatefulWidget {
   const Debug({Key? key}) : super(key: key);
