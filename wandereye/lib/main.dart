@@ -17,7 +17,6 @@ import 'dart:typed_data';
 
 late SharedPreferences localData;
 late List<Map<String, dynamic>> localChallengeList;
-
 List<Map<String, dynamic>> test_localChallengeList = [
   {
     "token": "12345",
@@ -64,8 +63,11 @@ void main() async {
 
   //for testing only
   List<String> encodedList = listMapToJsonList(test_localChallengeList);
+  await localData.clear();
+
   await localData.setStringList('challenges', encodedList);
   //actual things
+
   final cameras = await availableCameras();
   final camera = cameras.first;
 
@@ -222,33 +224,135 @@ class MyHomePage extends StatefulWidget {
 Widget CreateChallengeScreen(context) {
   late CameraDescription camera;
   List<CameraDescription> cameras;
+  late TextEditingController _controller;
 
   availableCameras().then((availableCameras) {
     cameras = availableCameras;
     camera = cameras.first;
   });
-  String imagePath;
+  _controller = TextEditingController();
+  late String hint;
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text("Create a challenge"),
+          ),
+          body: Column(
+            children: [
+              localData.getStringList('localChal') != null
+                  ? Image.file(File(localData.getStringList('localChal')![0]))
+                  : Image.network(
+                      'https://images.assetsdelivery.com/compings_v2/yehorlisnyi/yehorlisnyi2104/yehorlisnyi210400016.jpg'),
+              Center(
+                child: TextField(
+                    controller: _controller,
+                    onSubmitted: (String value) async {
+                      hint = value;
+                    }),
+              ),
+              localData.getStringList('localChal') == null
+                  ? ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TakePictureScreen(
+                              camera: camera,
+                            ),
+                          ),
+                        ).then((value) => setState(() {}));
+                      },
+                      child: Text("Take Pic!"))
+                  : ElevatedButton(
+                      onPressed: () {
+                        List<String>? tmp =
+                            localData.getStringList('localChal');
 
-  return Scaffold(
-      appBar: AppBar(
-        title: Text("Create a challenge"),
-      ),
-      body: ListView(
+                        tmp!.add(hint);
+                        localData.setStringList('localChal', tmp);
+                        Navigator.pop(context);
+                      },
+                      child: Text("Create Challenge!"))
+            ],
+          ));
+    },
+  );
+}
+
+class SeeLocalChallenge extends StatefulWidget {
+  const SeeLocalChallenge({Key? key}) : super(key: key);
+
+  @override
+  State<SeeLocalChallenge> createState() => _LocalChallengeState();
+}
+
+class _LocalChallengeState extends State<SeeLocalChallenge> {
+  List<String>? localChal = localData.getStringList('localChal');
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Your Challenge!"),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TakePictureScreen(
-                      camera: camera,
-                    ),
+          Container(
+            padding: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.9),
+                spreadRadius: 0.5,
+                blurRadius: 5,
+                offset: const Offset(0, 6),
+              ),
+            ], borderRadius: BorderRadius.circular(30)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              clipBehavior: Clip.hardEdge,
+              child: SizedBox(
+                height: 400,
+                width: 400,
+                child: Image.file(File(localChal![0]), fit: BoxFit.cover),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                "Hint:",
+                textAlign: TextAlign.start,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 100,
+              width: double.infinity,
+              child: Container(
+                color: const Color.fromARGB(76, 0, 0, 0),
+                child: InkWell(
+                  onTap: (() {
+                    setState(() {
+                      _clicked = !_clicked;
+                    });
+                  }),
+                  child: Center(
+                    child: _clicked
+                        ? Text(
+                            localChal![3],
+                          )
+                        : const Text("Click to show hint"),
                   ),
-                );
-              },
-              child: Text("Pic!"))
+                ),
+              ),
+            ),
+          ])
         ],
-      ));
+      ),
+    );
+  }
 }
 
 // A screen that allows users to take a picture using a given camera.
@@ -323,7 +427,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             final image = await _controller.takePicture();
             Position position = await Geolocator.getCurrentPosition(
                 desiredAccuracy: LocationAccuracy.high);
-            final prefs = await SharedPreferences.getInstance();
             final loc = await Geolocator.getCurrentPosition();
             if (position == null || image == null) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -336,7 +439,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 loc.toString()
               ];
 
-              await prefs.setStringList('localChal', myChallData);
+              await localData.setStringList('localChal', myChallData);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(myChallData.toString()),
@@ -345,15 +448,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             }
 
             // If the picture was taken, display it on a new screen.
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image.path,
-                ),
-              ),
-            );
+            Navigator.pop(context);
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);
@@ -500,18 +595,31 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: _mainBodyOptions.elementAt(_bottomNavIndex),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "chalBut",
-        //params
-        child: const Icon(Icons.add_rounded),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateChallengeScreen(context)),
-          );
-        },
-      ),
+      floatingActionButton: localData.getStringList('localChal') == null
+          ? FloatingActionButton(
+              heroTag: "noChalBut",
+              //params
+              child: const Icon(Icons.add_rounded),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateChallengeScreen(context)),
+                ).then((value) => setState(() {}));
+              },
+            )
+          : FloatingActionButton(
+              heroTag: "yesChalBut",
+              //params
+              child: const Icon(Icons.picture_in_picture),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SeeLocalChallenge()),
+                );
+              },
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: bottom_navbarIcons,
