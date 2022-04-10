@@ -17,6 +17,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 late SharedPreferences localData;
+
+// ========= For testing purposes only ==========
 late List<Map<String, dynamic>> localChallengeList;
 List<Map<String, dynamic>> test_localChallengeList = [
   {
@@ -24,20 +26,25 @@ List<Map<String, dynamic>> test_localChallengeList = [
     "image_url":
         "https://s2.glbimg.com/6VyBKVon5j6Ofdc70Yt9c1FTlvk=/0x0:695x521/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/9/Q/4z9FL4T1G7MKHrl1AYpg/2014-04-11-bliss.jpg",
     "hint": "Try Jumping.",
+    "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
   },
   {
     "token": "45678",
     "image_url":
         "https://staticg.sportskeeda.com/editor/2022/02/45fd5-16457369574775-1920.jpg",
     "hint": "Behold, dog!",
+    "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
   },
   {
     "token": "90000",
     "image_url":
         "https://curatedmint.com/wp-content/uploads/2021/07/warframe-fortuna-720x720.jpg",
     "hint": "Secret wall ahead.",
+    "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
   }
 ];
+
+//=======================================
 
 List<String> listMapToJsonList(List<Map<String, dynamic>> input) {
   List<String> tmp = [];
@@ -57,6 +64,32 @@ List<Map<String, dynamic>> jsonListToListMap(List<String> input) {
   return tmp;
 }
 
+void verifyExpiredChallenges() {
+  if (localData.containsKey('localChal')) {
+    List<String>? localCh = localData.getStringList('localChal');
+    if ((DateTime.now().toUtc().millisecondsSinceEpoch / 1000) -
+            int.parse(localCh![1]) >
+        86400) {
+      localData.remove('localChal');
+    }
+  }
+  if (localData.containsKey('challenges')) {
+    List<String>? tmp = localData.getStringList('challenges');
+    if (tmp != null) {
+      List<Map<String, dynamic>> challs = jsonListToListMap(tmp);
+      List<Map<String, dynamic>> to_save = jsonListToListMap(tmp);
+
+      for (Map<String, dynamic> chall in challs) {
+        if (DateTime.now().toUtc().millisecondsSinceEpoch / 1000 - chall['ts'] >
+            86400) {
+          to_save.remove(chall);
+        }
+      }
+      localData.setStringList('challenges', listMapToJsonList(to_save));
+    }
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -67,6 +100,7 @@ void main() async {
   await localData.clear();
 
   await localData.setStringList('challenges', encodedList);
+
   //actual things
 
   final cameras = await availableCameras();
