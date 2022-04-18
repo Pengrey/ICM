@@ -656,7 +656,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ]),
       ),
-      const Body(),
+      const NearbyPage(),
       Container(),
       Container(),
       Container(
@@ -714,14 +714,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+class NearbyPage extends StatefulWidget {
+  const NearbyPage({Key? key}) : super(key: key);
 
   @override
-  _MyBodyState createState() => _MyBodyState();
+  _NearbyPageState createState() => _NearbyPageState();
 }
 
-class _MyBodyState extends State<Body> {
+class _NearbyPageState extends State<NearbyPage> {
   final String userName = Random().nextInt(10000).toString(); // TODO
   final Strategy strategy = Strategy.P2P_STAR;
   Map<String, ConnectionInfo> endpointMap = {};
