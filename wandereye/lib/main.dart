@@ -16,7 +16,12 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:math';
 import 'dart:typed_data';
 
+// Found chall popup
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 late SharedPreferences localData;
+List? lastPosition;
+List? challPosition;
 
 // ========= For testing purposes only ==========
 late List<Map<String, dynamic>> localChallengeList;
@@ -556,7 +561,6 @@ class _MyHomePageState extends State<MyHomePage> {
   // Location stuff
   final StreamController<Position> _locStream = StreamController();
   late StreamSubscription<Position> locationSubscription;
-  Position? lastPosition;
 
   void showSnackbar(dynamic a) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -570,17 +574,75 @@ class _MyHomePageState extends State<MyHomePage> {
     locationSubscription = positionStream.listen((Position position) {
       _locStream.sink.add(position);
 
-      // Show first position
-      lastPosition ??= position;
+      // DEBUG STUFF
+      //showSnackbar("LastP: $lastPosition"); // show last position
+      //challPosition = ["40.9596", "-8.6340"]; // mocked challenge position TODO: make coord assignments
 
-      // Show position if changed
-      if (lastPosition?.latitude != position.latitude ||
-          lastPosition?.longitude != position.longitude) {
-        lastPosition = position;
+      // We get lasposition initiated
+      lastPosition ??= [
+        position.latitude.toStringAsFixed(4),
+        position.longitude.toStringAsFixed(4)
+      ];
+
+      // If position changes, we change last position
+      if (lastPosition![0] != position.latitude.toStringAsFixed(4) ||
+          lastPosition![1] != position.longitude.toStringAsFixed(4)) {
+        lastPosition = [
+          position.latitude.toStringAsFixed(4),
+          position.longitude.toStringAsFixed(4)
+        ];
         showSnackbar(
-            "Position changed to: ${position.toString()}"); // TODO comment this to stop snackbar spam
+            "Changed to Lat: ${position.latitude.toStringAsFixed(4)}, Lon: ${position.longitude.toStringAsFixed(4)}");
       }
+
+      // Check if coords equal to chall
+      if (lastPosition![0] == challPosition![0] &&
+          lastPosition![1] == challPosition![1]) showChallFouPopup(context);
     });
+  }
+
+  showChallFouPopup(context) {
+    // Reusable alert style
+    var alertStyle = AlertStyle(
+        animationType: AnimationType.fromTop,
+        isCloseButton: false,
+        isOverlayTapDismiss: false,
+        descStyle: const TextStyle(fontWeight: FontWeight.bold),
+        animationDuration: const Duration(milliseconds: 400),
+        alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+          side: const BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+        titleStyle: const TextStyle(
+          color: Colors.green,
+        ),
+        constraints: const BoxConstraints.expand(width: 300),
+        //First to chars "55" represents transparency of color
+        overlayColor: const Color(0x55000000),
+        alertElevation: 0,
+        alertAlignment: Alignment.topCenter);
+
+    // Alert dialog using custom alert style
+    Alert(
+      context: context,
+      style: alertStyle,
+      type: AlertType.success,
+      title: "Congratulations!",
+      desc: "You found me :D",
+      buttons: [
+        DialogButton(
+          child: const Text(
+            "Yay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: const Color.fromRGBO(0, 179, 134, 1.0),
+          radius: BorderRadius.circular(0.0),
+        ),
+      ],
+    ).show();
   }
 
   @override

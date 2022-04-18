@@ -1,115 +1,346 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(RatelApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
+class RatelApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('RFlutter Alert by Ratel'),
+        ),
+        body: PopupDialog(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+class PopupDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+    return Container(
+      child: Center(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            ElevatedButton(
+              child: Text('Basic Alert'),
+              onPressed: () => _onBasicAlertPressed(context),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            ElevatedButton(
+              child: Text('Basic Waiting Alert'),
+              onPressed: () => _onBasicWaitingAlertPressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Custom Animation Alert'),
+              onPressed: () => _onCustomAnimationAlertPressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with Button'),
+              onPressed: () => _onAlertButtonPressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with Buttons'),
+              onPressed: () => _onAlertButtonsPressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with Style'),
+              onPressed: () => _onAlertWithStylePressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with Custom Image'),
+              onPressed: () => _onAlertWithCustomImagePressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with Custom Content'),
+              onPressed: () => _onAlertWithCustomContentPressed(context),
+            ),
+            ElevatedButton(
+              child: Text('Alert with/without Root navigator'),
+              onPressed: () => _onAlertWithRootNavigator(context),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+// The easiest way for creating RFlutter Alert
+  _onBasicAlertPressed(context) {
+    Alert(
+      context: context,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+    ).show();
+  }
+
+  // Code will continue after alert is closed.
+  _onBasicWaitingAlertPressed(context) async {
+    await Alert(
+      context: context,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+    ).show();
+
+    // Code will continue after alert is closed.
+    debugPrint("Alert closed now.");
+  }
+
+//Custom animation alert
+  _onCustomAnimationAlertPressed(context) {
+    Alert(
+      context: context,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+      alertAnimation: fadeAlertAnimation,
+    ).show();
+  }
+
+  Widget fadeAlertAnimation(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return Align(
+      child: FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
+    );
+  }
+
+// Alert with single button.
+  _onAlertButtonPressed(context) {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "COOL",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => _onCustomAnimationAlertPressed(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+// Alert with multiple and custom buttons
+  _onAlertButtonsPressed(context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "FLAT",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "GRADIENT",
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+          gradient: LinearGradient(colors: [
+            Color.fromRGBO(116, 116, 191, 1.0),
+            Color.fromRGBO(52, 138, 199, 1.0),
+          ]),
+        )
+      ],
+    ).show();
+  }
+
+// Advanced using of alerts
+  _onAlertWithStylePressed(context) {
+    // Reusable alert style
+    var alertStyle = AlertStyle(
+        animationType: AnimationType.fromTop,
+        isCloseButton: false,
+        isOverlayTapDismiss: false,
+        descStyle: const TextStyle(fontWeight: FontWeight.bold),
+        animationDuration: const Duration(milliseconds: 400),
+        alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+          side: const BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+        titleStyle: const TextStyle(
+          color: Colors.green,
+        ),
+        constraints: const BoxConstraints.expand(width: 300),
+        //First to chars "55" represents transparency of color
+        overlayColor: const Color(0x55000000),
+        alertElevation: 0,
+        alertAlignment: Alignment.topCenter);
+
+    // Alert dialog using custom alert style
+    Alert(
+      context: context,
+      style: alertStyle,
+      type: AlertType.success,
+      title: "Congratulations!",
+      desc: "You found me :D",
+      buttons: [
+        DialogButton(
+          child: const Text(
+            "Yay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: const Color.fromRGBO(0, 179, 134, 1.0),
+          radius: BorderRadius.circular(0.0),
+        ),
+      ],
+    ).show();
+  }
+
+// Alert custom images
+  _onAlertWithCustomImagePressed(context) {
+    Alert(
+      context: context,
+      title: "RFLUTTER ALERT",
+      desc: "Flutter is more awesome with RFlutter Alert.",
+      image: Image.asset("assets/success.png"),
+    ).show();
+  }
+
+// Alert custom content
+  _onAlertWithCustomContentPressed(context) {
+    Alert(
+        context: context,
+        title: "LOGIN",
+        content: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.account_circle),
+                labelText: 'Username',
+              ),
+            ),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock),
+                labelText: 'Password',
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "LOGIN",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
+// Alert without root navigator
+  _onAlertWithRootNavigator(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            CupertinoTabScaffold(
+          tabBar: CupertinoTabBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle)),
+              BottomNavigationBarItem(icon: Icon(Icons.search))
+            ],
+          ),
+          tabBuilder: (BuildContext context, int index) {
+            return CupertinoTabView(
+              builder: (BuildContext context) {
+                return CupertinoPageScaffold(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "We are inside a CupertinoTabView, which has it's own navigator.",
+                        style: TextStyle(inherit: false, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      ElevatedButton(
+                        child: Text('Alert without Root navigator'),
+                        onPressed: () => Alert(
+                            context: context,
+                            title:
+                                "pop() use root navigator ?\n\n* False will pop Alert and stay in CupertinoTabView\n* True will pop Alert and CupertinoTabView",
+                            useRootNavigator: false,
+                            buttons: [
+                              DialogButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  "false",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+                              DialogButton(
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                                child: Text(
+                                  "true",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              )
+                            ]).show(),
+                      ),
+                      ElevatedButton(
+                        child: Text('Alert with Root navigator'),
+                        onPressed: () => Alert(
+                            context: context,
+                            title:
+                                "pop() use root navigator ?\n\n* False will pop CupertinoTabView and raise error in the background !\n* True will pop Alert",
+                            useRootNavigator: true,
+                            buttons: [
+                              DialogButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  "false",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+                              DialogButton(
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                                child: Text(
+                                  "true",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              )
+                            ]).show(),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
