@@ -25,9 +25,9 @@ import 'package:http_parser/http_parser.dart';
 late SharedPreferences localData;
 List? lastPosition;
 List? challPosition;
-//final String userName = Random().nextInt(10000).toString();
-String userName = '1234';
-String gameServer = "http://10.0.2.2:5000/";
+final String userName = Random().nextInt(10000).toString();
+//String userName = '1234';
+String gameServer = "https://wandereye.azurewebsites.net/";
 // ========= For testing purposes only ==========
 late List<Map<String, dynamic>> localChallengeList;
 List<Map<String, dynamic>> test_localChallengeList = [
@@ -126,7 +126,9 @@ void fetchChallengeFromServer(userID) {
         "hint": resp['hint'],
         "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
       };
-      test_localChallengeList.add(newChallenge);
+      localChallengeList.add(newChallenge);
+      localData.setStringList(
+          'challenges', listMapToJsonList(localChallengeList));
       print("New challenge!");
       reloadChallengeList();
     }
@@ -138,8 +140,8 @@ void verifyExpiredChallenges() {
   if (localData.containsKey('localChal')) {
     List<String>? localCh = localData.getStringList('localChal');
     if ((DateTime.now().toUtc().millisecondsSinceEpoch / 1000) -
-            int.parse(localCh![1]) >
-        86400) {
+            double.parse(localCh![1]) >
+        10000) {
       localData.remove('localChal');
     }
   }
@@ -167,13 +169,13 @@ void main() async {
   localData = await SharedPreferences.getInstance();
 
   //for testing only
-  List<String> encodedList = listMapToJsonList(test_localChallengeList);
+  //List<String> encodedList = listMapToJsonList(test_localChallengeList);
   await localData.clear();
 
-  await localData.setStringList('challenges', encodedList);
+  //await localData.setStringList('challenges', encodedList);
 
   //actual things
-
+  verifyExpiredChallenges();
   final cameras = await availableCameras();
   final camera = cameras.first;
 
@@ -181,7 +183,7 @@ void main() async {
     List<String>? tmp = localData.getStringList('challenges');
     localChallengeList = jsonListToListMap(tmp!);
   } else {
-    localChallengeList = [{}];
+    localChallengeList = [];
   }
   print("LOADED");
   runApp(const MyApp());
@@ -220,16 +222,8 @@ List<List<String>> localChallengeList = [
 int _notifications = 1;
 
 void reloadChallengeList() async {
-  List<String> encodedList = listMapToJsonList(test_localChallengeList);
-
-  await localData.setStringList('challenges', encodedList);
-  if (localData.containsKey('challenges')) {
-    List<String>? tmp = localData.getStringList('challenges');
-    localChallengeList = jsonListToListMap(tmp!);
-  } else {
-    localChallengeList = [{}];
-  }
   print("REloaded!");
+  verifyExpiredChallenges();
 }
 
 class MyApp extends StatelessWidget {
@@ -749,7 +743,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.emoji_events_rounded,
     Icons.settings_rounded,
   ];
-
+  int chalSize = localChallengeList != [{}] ? localChallengeList.length : 0;
   List<Widget> youGotMail = <Widget>[
     const SizedBox(height: 70),
     SizedBox(
@@ -794,9 +788,11 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(left: 50, right: 50),
-                children: youGotMail +
-                    List<Widget>.generate(localChallengeList.length,
-                        (index) => pictureCard(context, index))),
+                children: chalSize > 0
+                    ? (youGotMail +
+                        List<Widget>.generate(
+                            chalSize, (index) => pictureCard(context, index)))
+                    : [Spacer()]),
           ),
         ]),
       ),
@@ -925,6 +921,7 @@ class _NearbyPageState extends State<NearbyPage> {
       if (payload.type == PayloadType.BYTES) {
         String str = String.fromCharCodes(payload.bytes!);
         showSnackbar("New challenge: " + str);
+        fetchChallengeFromServer(str);
       } else {
         showSnackbar("Format ERROR");
       }
