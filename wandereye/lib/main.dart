@@ -19,10 +19,15 @@ import 'dart:typed_data';
 // Found chall popup
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+
 late SharedPreferences localData;
 List? lastPosition;
 List? challPosition;
-
+//final String userName = Random().nextInt(10000).toString();
+String userName = '1234';
+String gameServer = "http://10.0.2.2:5000/";
 // ========= For testing purposes only ==========
 late List<Map<String, dynamic>> localChallengeList;
 List<Map<String, dynamic>> test_localChallengeList = [
@@ -69,6 +74,66 @@ List<Map<String, dynamic>> jsonListToListMap(List<String> input) {
   return tmp;
 }
 
+void sendLocalChallToServer() {
+  List<String>? dataLocal = localData.containsKey('localChal')
+      ? localData.getStringList('localChal')
+      : [""];
+
+  if (dataLocal!.isEmpty) {
+    return;
+  }
+
+  List<String> data = [
+    userName, //duh
+    // b64img, // image in b64 format :)
+    dataLocal[1], //timestamp
+    dataLocal[2], //location
+    dataLocal[3], //hint
+  ];
+
+  var postUri = Uri.parse(gameServer + "submit");
+  var request = http.MultipartRequest("POST", postUri);
+
+  request.fields['user'] = userName;
+  request.fields['timestamp'] = dataLocal[1];
+  request.fields['location'] = dataLocal[2];
+  request.fields['hint'] = dataLocal[3];
+
+  Uint8List img = File(dataLocal[0]).readAsBytesSync();
+  String img64 = base64Encode(img);
+
+  request.fields['image'] = img64;
+  //request.files.add(http.MultipartFile.fromBytes('image', img,
+  //    contentType: MediaType('image', 'jpeg')));
+  //print("sent a request to " + gameServer);
+  request.send().then((response) {
+    if (response.statusCode == 200) print("Uploaded!");
+  });
+}
+
+void fetchChallengeFromServer(userID) {
+  var uri = Uri.parse(gameServer + "challenge/" + userID.toString());
+  //var request = http.MultipartRequest("GET", postUri);
+  http.get(uri).then((response) {
+    if (response.statusCode == 200) {
+      print(response);
+      Map<String, dynamic> resp = jsonDecode(response.body);
+      print(resp['user']);
+
+      Map<String, dynamic> newChallenge = {
+        "token": resp['user'],
+        "image_url": gameServer + resp['user'] + '.jpg',
+        "hint": resp['hint'],
+        "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
+      };
+      test_localChallengeList.add(newChallenge);
+      print("New challenge!");
+      reloadChallengeList();
+    }
+  });
+}
+
+//TODO Apply this where needed. maybe when loadnig main page?
 void verifyExpiredChallenges() {
   if (localData.containsKey('localChal')) {
     List<String>? localCh = localData.getStringList('localChal');
@@ -78,6 +143,7 @@ void verifyExpiredChallenges() {
       localData.remove('localChal');
     }
   }
+
   if (localData.containsKey('challenges')) {
     List<String>? tmp = localData.getStringList('challenges');
     if (tmp != null) {
@@ -112,7 +178,7 @@ void main() async {
   final camera = cameras.first;
 
   if (localData.containsKey('challenges')) {
-    List<String>? tmp = await localData.getStringList('challenges');
+    List<String>? tmp = localData.getStringList('challenges');
     localChallengeList = jsonListToListMap(tmp!);
   } else {
     localChallengeList = [{}];
@@ -152,6 +218,19 @@ List<List<String>> localChallengeList = [
 
 */
 int _notifications = 1;
+
+void reloadChallengeList() async {
+  List<String> encodedList = listMapToJsonList(test_localChallengeList);
+
+  await localData.setStringList('challenges', encodedList);
+  if (localData.containsKey('challenges')) {
+    List<String>? tmp = localData.getStringList('challenges');
+    localChallengeList = jsonListToListMap(tmp!);
+  } else {
+    localChallengeList = [{}];
+  }
+  print("REloaded!");
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -311,6 +390,7 @@ Widget CreateChallengeScreen(context) {
 
                         tmp!.add(hint);
                         localData.setStringList('localChal', tmp);
+                        sendLocalChallToServer();
                         Navigator.pop(context);
                       },
                       child: Text("Create Challenge!"))
@@ -596,7 +676,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       // Check if coords equal to chall
-      if (lastPosition![0] == challPosition![0] &&
+      if (challPosition != null &&
+          lastPosition != null &&
+          lastPosition![0] == challPosition![0] &&
           lastPosition![1] == challPosition![1]) showChallFouPopup(context);
     });
   }
@@ -690,7 +772,7 @@ class _MyHomePageState extends State<MyHomePage> {
           badgeContent: Text(_notifications.toString()),
           child: FloatingActionButton(
             heroTag: "notifBut",
-            onPressed: () => {},
+            onPressed: () => {fetchChallengeFromServer(1234)},
             child: const Icon(Icons.message_outlined),
             mini: true,
             shape: const ContinuousRectangleBorder(
@@ -987,7 +1069,6 @@ class Debug extends StatefulWidget {
 }
 
 class _MyDebugState extends State<Debug> {
-  final String userName = Random().nextInt(10000).toString();
   final Strategy strategy = Strategy.P2P_STAR;
   Map<String, ConnectionInfo> endpointMap = {};
 
@@ -1291,6 +1372,14 @@ class _MyDebugState extends State<Debug> {
                         .toList()
                         .join('\n');
                     showSnackbar(files);
+                  },
+                ),
+                const Divider(),
+                const Text("Server stuff"),
+                ElevatedButton(
+                  child: const Text("Send local challenge to server"),
+                  onPressed: () {
+                    sendLocalChallToServer();
                   },
                 ),
               ],
