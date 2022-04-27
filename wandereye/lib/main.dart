@@ -21,6 +21,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:wandereye/users_scores.dart';
 
 late SharedPreferences localData;
 List? lastPosition;
@@ -797,7 +798,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ]),
       ),
       const NearbyPage(),
-      Container(),
+      LeaderboardPage(),
       Container(),
       Container(
         child: StatefulBuilder(
@@ -1051,6 +1052,117 @@ class _NearbyPageState extends State<NearbyPage> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LeaderboardPage extends StatelessWidget {
+  LeaderboardPage({Key? key}) : super(key: key);
+
+  List<Map<String, Object>> data = UsersScore.getScores;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 40),
+              const Image(image: AssetImage('assets/podium.png')),
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          height: 70,
+                          width: double.maxFinite,
+                          child: Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(7),
+                              child: Stack(children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10, top: 5),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  userPosition(
+                                                      data[index]),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  userName(data[index]),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  const Spacer(),
+                                                  userScore(data[index]),
+                                                  const SizedBox(
+                                                    width: 20,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ),
+                        );
+                      }))
+            ],
+          ),
+        ));
+  }
+
+  static Widget userName(data) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RichText(
+        text: TextSpan(
+          text: '   ${data['name']}',
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+        ),
+      ),
+    );
+  }
+
+  static Widget userScore(data) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RichText(
+        text: TextSpan(
+          text: '${data['points']}',
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+        ),
+      ),
+    );
+  }
+
+  static Widget userPosition(data) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: RichText(
+        text: TextSpan(
+          text: '${data['position']}',
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+        ),
       ),
     );
   }
