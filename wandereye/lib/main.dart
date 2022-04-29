@@ -29,7 +29,7 @@ import 'package:wandereye/users_scores.dart';
 late SharedPreferences localData;
 List? lastPosition;
 List? challPosition;
-final String userName = generateWordPairs().first.asString;
+late String userName;
 
 String gameServer = "https://wandereye.azurewebsites.net/";
 // ========= For testing purposes only ==========
@@ -197,6 +197,14 @@ void main() async {
   } else {
     localChallengeList = [];
   }
+
+  if (localData.containsKey('username')) {
+    userName = localData.getString('username')!;
+  } else {
+    userName = generateWordPairs().first.asString;
+    localData.setString('username', userName);
+  }
+
   print("LOADED");
   runApp(const MyApp());
 }
@@ -828,7 +836,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       const NearbyPage(),
       LeaderboardPage(),
-      Container(),
+      SettingsPage(),
       Container(
         child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -1190,6 +1198,86 @@ class LeaderboardPage extends StatelessWidget {
           text: '${data['position']}',
           style: const TextStyle(
               fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  final myController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Spacer(flex: 1),
+              const Image(
+                  image: AssetImage('assets/profilePic.png'),
+                  height: 150,
+                  width: 150),
+              const Spacer(flex: 1),
+              _buildTextField(labelText: 'Username'),
+              const Spacer(flex: 4),
+              ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.save,
+                  ),
+                  label: const Text("Save"),
+                  onPressed: () {
+                    if (myController.text.isNotEmpty) {
+                      localData.setString('username', myController.text);
+                      userName = myController.text;
+                    }
+                  }),
+              const Spacer(flex: 1),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextField _buildTextField({String labelText = '', bool obscureText = false}) {
+    return TextField(
+      controller: myController,
+      cursorColor: Colors.blue,
+      cursorWidth: 1.0,
+      obscureText: obscureText,
+      obscuringCharacter: '●',
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          color: Colors.blue,
+          fontSize: 18.0,
+        ),
+        fillColor: Colors.red,
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.blue,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(40.0),
+          ),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.blue,
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(40.0),
+          ),
         ),
       ),
     );
