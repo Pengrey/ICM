@@ -19,6 +19,9 @@ import 'dart:typed_data';
 // Found chall popup
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+// Name generator
+import 'package:english_words/english_words.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:wandereye/users_scores.dart';
@@ -26,8 +29,8 @@ import 'package:wandereye/users_scores.dart';
 late SharedPreferences localData;
 List? lastPosition;
 List? challPosition;
-final String userName = Random().nextInt(10000).toString();
-//String userName = '1234';
+final String userName = generateWordPairs().first.asString;
+
 String gameServer = "https://wandereye.azurewebsites.net/";
 // ========= For testing purposes only ==========
 late List<Map<String, dynamic>> localChallengeList;
@@ -863,7 +866,6 @@ class NearbyPage extends StatefulWidget {
 }
 
 class _NearbyPageState extends State<NearbyPage> {
-  final String userName = Random().nextInt(10000).toString(); // TODO
   final Strategy strategy = Strategy.P2P_STAR;
   Map<String, ConnectionInfo> endpointMap = {};
 
@@ -1097,8 +1099,7 @@ class LeaderboardPage extends StatelessWidget {
                                             children: <Widget>[
                                               Row(
                                                 children: <Widget>[
-                                                  userPosition(
-                                                      data[index]),
+                                                  userPosition(data[index]),
                                                   const SizedBox(
                                                     height: 10,
                                                   ),
