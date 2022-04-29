@@ -115,12 +115,15 @@ void sendLocalChallToServer() {
   });
 }
 
+int c = 0;
 void fetchChallengeFromServer(userID) {
-  var uri = Uri.parse(gameServer + "challenge/" + userID.toString());
+  //TODO : DELETR THIS !!!!!!!
+  //userID = "chiefglobe";
+  var uri = Uri.parse(gameServer + "challenge/" + userID);
   //var request = http.MultipartRequest("GET", postUri);
+  c = c + 1;
   http.get(uri).then((response) {
     if (response.statusCode == 200) {
-      print(response);
       Map<String, dynamic> resp = jsonDecode(response.body);
       print(resp['user']);
 
@@ -134,7 +137,12 @@ void fetchChallengeFromServer(userID) {
       localData.setStringList(
           'challenges', listMapToJsonList(localChallengeList));
       print("New challenge!");
+
       reloadChallengeList();
+    } else {
+      if (c < 10) {
+        fetchChallengeFromServer(userID);
+      }
     }
   });
 }
@@ -342,7 +350,6 @@ Widget CreateChallengeScreen(context) {
   late CameraDescription camera;
   List<CameraDescription> cameras;
   late TextEditingController _controller;
-
   availableCameras().then((availableCameras) {
     cameras = availableCameras;
     camera = cameras.first;
@@ -352,10 +359,11 @@ Widget CreateChallengeScreen(context) {
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter setState) {
       return Scaffold(
-          appBar: AppBar(
-            title: Text("Create a challenge"),
-          ),
-          body: Column(
+        appBar: AppBar(
+          title: Text("Create a challenge"),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
               localData.getStringList('localChal') != null
                   ? Image.file(File(localData.getStringList('localChal')![0]))
@@ -393,7 +401,9 @@ Widget CreateChallengeScreen(context) {
                       },
                       child: Text("Create Challenge!"))
             ],
-          ));
+          ),
+        ),
+      );
     },
   );
 }
@@ -656,8 +666,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //showSnackbar("LastP: $lastPosition"); // show last position
       //challPosition = ["40.9596", "-8.6340"]; // mocked challenge position TODO: make coord assignments
 
-      // We get lasposition initiated
-      lastPosition ??= [
+      challPosition =
+          // We get lasposition initiated
+          lastPosition ??= [
         position.latitude.toStringAsFixed(4),
         position.longitude.toStringAsFixed(4)
       ];
@@ -672,7 +683,7 @@ class _MyHomePageState extends State<MyHomePage> {
         showSnackbar(
             "Changed to Lat: ${position.latitude.toStringAsFixed(4)}, Lon: ${position.longitude.toStringAsFixed(4)}");
       }
-
+      showSnackbar("Challenges:" + localChallengeList.toString());
       // Check if coords equal to chall
       if (challPosition != null &&
           lastPosition != null &&
@@ -747,7 +758,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Icons.emoji_events_rounded,
     Icons.settings_rounded,
   ];
-  int chalSize = localChallengeList != [{}] ? localChallengeList.length : 0;
+  //int chalSize = localChallengeList != [] ? localChallengeList.length : 0;
   List<Widget> youGotMail = <Widget>[
     const SizedBox(height: 70),
     SizedBox(
@@ -782,9 +793,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ]),
     )
   ];
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
 
   @override
   Widget build(BuildContext context) {
+    rebuildAllChildren(context);
     List<Widget> _mainBodyOptions = [
       Container(
         child: Column(children: [
@@ -792,11 +812,17 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(left: 50, right: 50),
-                children: chalSize > 0
+                children: localChallengeList.isNotEmpty
                     ? (youGotMail +
-                        List<Widget>.generate(
-                            chalSize, (index) => pictureCard(context, index)))
-                    : [Spacer()]),
+                        List<Widget>.generate(localChallengeList.length,
+                            (index) => pictureCard(context, index)))
+                    : [
+                        const SizedBox(
+                          child: Text("Go get some challenges!"),
+                          width: 10,
+                          height: 10,
+                        )
+                      ]),
           ),
         ]),
       ),
@@ -912,19 +938,20 @@ class _NearbyPageState extends State<NearbyPage> {
       }
     }
 
-    // If there isnt permition for bluetooth (Android 12+) then we ask for it
+    // If there isnt permission for bluetooth (Android 12+) then we ask for it
     if (!await Nearby().checkBluetoothPermission()) {
       Nearby().askBluetoothPermission();
     }
   }
 
-  void onConnectionInit(String id, ConnectionInfo info) {
+  void onConnectionInit(String id, ConnectionInfo info) async {
     endpointMap[id] = info;
     Nearby().acceptConnection(id, onPayLoadRecieved: (endid, payload) async {
       if (payload.type == PayloadType.BYTES) {
         String str = String.fromCharCodes(payload.bytes!);
         showSnackbar("New challenge: " + str);
         fetchChallengeFromServer(str);
+        showSnackbar(localChallengeList);
       } else {
         showSnackbar("Format ERROR");
       }
