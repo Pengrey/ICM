@@ -47,7 +47,8 @@ def gib():
     tmp ={
         'user':data['user'],
         'ts':data['timestamp'],
-        'location':data['location'],
+        'lat':data['lat'],
+        'lon':data['lon'],
         'hint':data['hint'],
     }
     userdata[data['user']] = tmp

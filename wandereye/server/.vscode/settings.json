@@ -29,5 +29,7 @@
         "env.bak{,/**}",
         "venv.bak{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/7de9c4bb-9aca-43ba-a7a5-85b97a93c1e2/resourceGroups/ICM_Wandereye/providers/Microsoft.Web/sites/WanderEye",
+    "appService.deploySubpath": "."
 }

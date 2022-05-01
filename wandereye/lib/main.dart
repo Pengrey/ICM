@@ -91,8 +91,9 @@ void sendLocalChallToServer() {
     userName, //duh
     // b64img, // image in b64 format :)
     dataLocal[1], //timestamp
-    dataLocal[2], //location
-    dataLocal[3], //hint
+    dataLocal[2],
+    dataLocal[3], //location
+    dataLocal[4], //hint
   ];
 
   var postUri = Uri.parse(gameServer + "submit");
@@ -100,8 +101,10 @@ void sendLocalChallToServer() {
 
   request.fields['user'] = userName;
   request.fields['timestamp'] = dataLocal[1];
-  request.fields['location'] = dataLocal[2];
-  request.fields['hint'] = dataLocal[3];
+  request.fields['lat'] = dataLocal[2];
+  request.fields['lon'] = dataLocal[3];
+
+  request.fields['hint'] = dataLocal[4];
 
   Uint8List img = File(dataLocal[0]).readAsBytesSync();
   String img64 = base64Encode(img);
@@ -117,8 +120,7 @@ void sendLocalChallToServer() {
 
 int c = 0;
 void fetchChallengeFromServer(userID) {
-  //TODO : DELETR THIS !!!!!!!
-  //userID = "chiefglobe";
+  userID = "taskflour";
   var uri = Uri.parse(gameServer + "challenge/" + userID);
   //var request = http.MultipartRequest("GET", postUri);
   c = c + 1;
@@ -132,7 +134,10 @@ void fetchChallengeFromServer(userID) {
         "image_url": gameServer + resp['user'] + '.jpg',
         "hint": resp['hint'],
         "ts": DateTime.now().toUtc().millisecondsSinceEpoch / 1000,
+        "lat": resp['lat'],
+        "lon": resp['lon'],
       };
+
       localChallengeList.add(newChallenge);
       localData.setStringList(
           'challenges', listMapToJsonList(localChallengeList));
@@ -182,7 +187,7 @@ void main() async {
 
   //for testing only
   //List<String> encodedList = listMapToJsonList(test_localChallengeList);
-  await localData.clear();
+  //await localData.clear();
 
   //await localData.setStringList('challenges', encodedList);
 
@@ -363,7 +368,7 @@ Widget CreateChallengeScreen(context) {
     camera = cameras.first;
   });
   _controller = TextEditingController();
-  late String hint;
+  late String hint = "";
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter setState) {
       return Scaffold(
@@ -429,63 +434,65 @@ class _LocalChallengeState extends State<SeeLocalChallenge> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Your Challenge!"),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.9),
-                spreadRadius: 0.5,
-                blurRadius: 5,
-                offset: const Offset(0, 6),
-              ),
-            ], borderRadius: BorderRadius.circular(30)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              clipBehavior: Clip.hardEdge,
-              child: SizedBox(
-                height: 400,
-                width: 400,
-                child: Image.file(File(localChal![0]), fit: BoxFit.cover),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: 10),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Container(
-              padding: const EdgeInsets.only(left: 10),
-              child: const Text(
-                "Hint:",
-                textAlign: TextAlign.start,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 100,
-              width: double.infinity,
-              child: Container(
-                color: const Color.fromARGB(76, 0, 0, 0),
-                child: InkWell(
-                  onTap: (() {
-                    setState(() {
-                      _clicked = !_clicked;
-                    });
-                  }),
-                  child: Center(
-                    child: _clicked
-                        ? Text(
-                            localChal![3],
-                          )
-                        : const Text("Click to show hint"),
-                  ),
+              padding: const EdgeInsets.only(top: 10),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.9),
+                  spreadRadius: 0.5,
+                  blurRadius: 5,
+                  offset: const Offset(0, 6),
+                ),
+              ], borderRadius: BorderRadius.circular(30)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                clipBehavior: Clip.hardEdge,
+                child: SizedBox(
+                  height: 400,
+                  width: 400,
+                  child: Image.file(File(localChal![0]), fit: BoxFit.cover),
                 ),
               ),
             ),
-          ])
-        ],
+            const SizedBox(height: 10),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.only(left: 10),
+                child: const Text(
+                  "Hint:",
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: Container(
+                  color: const Color.fromARGB(76, 0, 0, 0),
+                  child: InkWell(
+                    onTap: (() {
+                      setState(() {
+                        _clicked = !_clicked;
+                      });
+                    }),
+                    child: Center(
+                      child: _clicked
+                          ? Text(
+                              localChal![4],
+                            )
+                          : const Text("Click to show hint"),
+                    ),
+                  ),
+                ),
+              ),
+            ])
+          ],
+        ),
       ),
     );
   }
@@ -568,11 +575,16 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Couldn't obtain location/picture :(")));
             } else {
+              List<String> locList = [
+                loc.latitude.toStringAsFixed(4),
+                loc.longitude.toStringAsFixed(4)
+              ];
               List<String> myChallData = [
                 image.path,
                 (DateTime.now().toUtc().millisecondsSinceEpoch / 1000)
                     .toString(),
-                loc.toString()
+                locList[0],
+                locList[1]
               ];
 
               await localData.setStringList('localChal', myChallData);
@@ -674,9 +686,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //showSnackbar("LastP: $lastPosition"); // show last position
       //challPosition = ["40.9596", "-8.6340"]; // mocked challenge position TODO: make coord assignments
 
-      challPosition =
-          // We get lasposition initiated
-          lastPosition ??= [
+      challPosition = null;
+      // We get lasposition initiated
+      lastPosition ??= [
         position.latitude.toStringAsFixed(4),
         position.longitude.toStringAsFixed(4)
       ];
@@ -688,15 +700,37 @@ class _MyHomePageState extends State<MyHomePage> {
           position.latitude.toStringAsFixed(4),
           position.longitude.toStringAsFixed(4)
         ];
-        showSnackbar(
-            "Changed to Lat: ${position.latitude.toStringAsFixed(4)}, Lon: ${position.longitude.toStringAsFixed(4)}");
+        // showSnackbar(
+        //   "Changed to Lat: ${position.latitude.toStringAsFixed(4)}, Lon: ${position.longitude.toStringAsFixed(4)}");
       }
-      showSnackbar("Challenges:" + localChallengeList.toString());
+      //showSnackbar("Challenges:" + localChallengeList.toString());
       // Check if coords equal to chall
-      if (challPosition != null &&
-          lastPosition != null &&
-          lastPosition![0] == challPosition![0] &&
-          lastPosition![1] == challPosition![1]) showChallFouPopup(context);
+      var toPop = [];
+      for (var chall in localChallengeList) {
+        //showSnackbar("WHY YOU NO WORK");
+
+        challPosition = [0, 0];
+        //showSnackbar("loc:" + chall["target"]);
+
+        challPosition![0] = chall["lat"];
+        //showSnackbar("Debuyg: " + challPosition![0]);
+        challPosition![1] = chall["lon"];
+        print("yare yare");
+        //showSnackbar(lastPosition![0] + " Rlon " + challPosition![0]);
+        //showSnackbar(lastPosition![1] + " Rlat " + challPosition![1]);
+
+        if (challPosition != null &&
+            lastPosition != null &&
+            lastPosition![0] == challPosition![0] &&
+            lastPosition![1] == challPosition![1]) {
+          showChallFouPopup(context);
+        }
+      }
+      if (toPop != []) {
+        for (var chall in toPop) {
+          localChallengeList.remove(chall);
+        }
+      }
     });
   }
 
@@ -789,7 +823,7 @@ class _MyHomePageState extends State<MyHomePage> {
           badgeContent: Text(_notifications.toString()),
           child: FloatingActionButton(
             heroTag: "notifBut",
-            onPressed: () => {fetchChallengeFromServer(1234)},
+            onPressed: () => {fetchChallengeFromServer("")},
             child: const Icon(Icons.message_outlined),
             mini: true,
             shape: const ContinuousRectangleBorder(
@@ -824,13 +858,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? (youGotMail +
                         List<Widget>.generate(localChallengeList.length,
                             (index) => pictureCard(context, index)))
-                    : [
-                        const SizedBox(
-                          child: Text("Go get some challenges!"),
-                          width: 10,
-                          height: 10,
-                        )
-                      ]),
+                    : youGotMail),
           ),
         ]),
       ),
@@ -869,13 +897,16 @@ class _MyHomePageState extends State<MyHomePage> {
               heroTag: "yesChalBut",
               //params
               child: const Icon(Icons.picture_in_picture),
-              onPressed: () {
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) =>
+                      const SeeLocalChallenge()), /* () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const SeeLocalChallenge()),
                 );
-              },
+              },*/
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
