@@ -18,4 +18,8 @@
     <string name="speed2">-</string>
     <string name="speed3">-</string>
     <string name="_call">call</string>
+    <string name="username">username</string>
+    <string name="sPhoneNum" />
+    <string name="save">SAVE</string>
+    <string name="cancel">Cancel</string>
 </resources>

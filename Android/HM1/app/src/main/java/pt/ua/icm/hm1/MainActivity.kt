@@ -1,8 +1,12 @@
 package pt.ua.icm.hm1
 
+import android.app.Dialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Window
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
@@ -103,6 +107,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Speed dial buttons
+        buttons0.setOnLongClickListener{
+            onLongSpeedButtonClick(buttons0)
+            true
+        }
+
+        buttons1.setOnLongClickListener{
+            onLongSpeedButtonClick(buttons1)
+            true
+        }
+
+        buttons2.setOnLongClickListener{
+            onLongSpeedButtonClick(buttons2)
+            true
+        }
 
         // Action buttons
         buttonDelete.setOnClickListener {
@@ -137,5 +155,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         numberViewCurrentNumber.text = currentValue
+    }
+
+    // On long speed button click func
+    private fun onLongSpeedButtonClick(speedButton: Button) {
+        // TODO persistence
+
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_add_sd)
+        val userName = dialog.findViewById(R.id.username) as EditText
+        val phoneNumber = dialog.findViewById(R.id.phoneNumber) as EditText
+        val saveBtn = dialog.findViewById(R.id.saveBtn) as Button
+        val cancelBtn = dialog.findViewById(R.id.canBtn) as Button
+        saveBtn.setOnClickListener {
+            val names = userName.text.toString().split(" ")
+            if(names.size >= 2){
+                speedButton.text = StringBuilder().append(names[0][0]).append(".").append(names[1][0])
+            }else if (names.size == 1 && userName.text.toString().isNotBlank()){
+                speedButton.text = userName.text.toString()[0].toString()
+            }
+            dialog.dismiss()
+        }
+        cancelBtn.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
     }
 }

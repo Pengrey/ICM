@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,16 +13,22 @@
 
     <Button
         android:id="@+id/numberView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_columnSpan="2"
         android:layout_gravity="fill_horizontal"
         android:backgroundTint="#949795"
         android:clickable="false"
         android:insetLeft="6dp"
+        android:insetRight="6dp"
+        android:maxWidth="88dip"
+        android:maxHeight="48dip"
+        android:maxLines="1"
+        android:minLines="1"
         android:textAlignment="viewEnd"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="16sp"
+        app:iconPadding="0dp"
         tools:ignore="RtlCompat" />
 
     <ImageButton
