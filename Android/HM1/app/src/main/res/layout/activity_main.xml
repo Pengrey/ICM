@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:backgroundTint="#00C853"
     android:columnCount="3"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:scaleX="1.2"
+    android:scaleY="1.3">
 
     <Button
         android:id="@+id/numberView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:layout_gravity="fill"
+        android:layout_gravity="fill_horizontal"
         android:backgroundTint="#949795"
         android:clickable="false"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:insetLeft="6dp"
+        android:textAlignment="viewEnd"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16sp"
+        tools:ignore="RtlCompat" />
 
     <ImageButton
         android:id="@+id/button_delete"
-        android:layout_width="88dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="end"
         android:backgroundTint="#D50000"
         android:contentDescription="@string/_delete"
         android:src="@android:drawable/ic_input_delete"
@@ -27,62 +36,92 @@
 
     <Button
         android:id="@+id/button_speed0"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/speed1" />
 
     <Button
         android:id="@+id/button_speed1"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/speed2" />
 
     <Button
         android:id="@+id/button_speed2"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/speed3" />
 
     <Button
         android:id="@+id/button_1"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_1" />
 
     <Button
         android:id="@+id/button_2"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_2" />
 
     <Button
         android:id="@+id/button_3"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_3" />
 
     <Button
         android:id="@+id/button_4"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_4" />
 
     <Button
         android:id="@+id/button_5"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_5" />
 
     <Button
         android:id="@+id/button_6"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_6" />
 
     <Button
         android:id="@+id/button_7"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_7" />
 
     <Button
         android:id="@+id/button_8"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_8" />
 
     <Button
         android:id="@+id/button_9"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_9" />
 
     <Button
         android:id="@+id/button_plus"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_plus" />
 
     <Button
         android:id="@+id/button_0"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_0" />
 
     <Button
         android:id="@+id/button_hashtag"
+        android:insetLeft="6dp"
+        android:insetRight="6dp"
         android:text="@string/_hashtag" />
 
     <ImageButton
