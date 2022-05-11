@@ -2,7 +2,9 @@ package pt.ua.icm.hm1
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -10,6 +12,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -153,6 +156,11 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        // Call short press
+        buttonCall.setOnClickListener{
+            onShortCallButtonClick(numberViewCurrentNumber)
+        }
+
         // Shared preferences assignments
         // Speed Dial 0
         buttons0.text = sharedPreferences.getString(getString(R.string.speed0Nm), "-").toString()
@@ -242,5 +250,21 @@ class MainActivity : AppCompatActivity() {
     // On short speed button click func
     private fun onShortSpeedButtonClick(dispButton: Button, idx: String, prefs: SharedPreferences) {
         dispButton.text = prefs.getString("Ph$idx", "").toString()
+    }
+
+    // On call button click func
+    private fun onShortCallButtonClick(dispButton: Button){
+        val dispVal: String = dispButton.text.toString()
+
+        if(dispVal.isNotEmpty()) {
+            try {
+                // Launch the Phone app's dialer with a phone number to dial a call.
+                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$dispVal")))
+            } catch (s: SecurityException) {
+                // show() method display the toast with exception message.
+                Toast.makeText(this, "An error occurred", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
     }
 }
