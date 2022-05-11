@@ -45,19 +45,19 @@
         android:id="@+id/button_speed0"
         android:insetLeft="6dp"
         android:insetRight="6dp"
-        android:text="@string/speed1" />
+        android:text="@string/speed0Nm" />
 
     <Button
         android:id="@+id/button_speed1"
         android:insetLeft="6dp"
         android:insetRight="6dp"
-        android:text="@string/speed2" />
+        android:text="@string/speed1Nm" />
 
     <Button
         android:id="@+id/button_speed2"
         android:insetLeft="6dp"
         android:insetRight="6dp"
-        android:text="@string/speed3" />
+        android:text="@string/speed2Nm" />
 
     <Button
         android:id="@+id/button_1"
