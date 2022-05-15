@@ -1,47 +1,53 @@
-Data binding basics - Starter Code
-==================================
+# Homework Questions
 
-Use as starter code for the Data binding basics codelab.
-This is the same AboutMe app the you built in a previous codelab.
+### Question 1
+Why do you want to minimize explicit and implicit calls to findViewById()?
 
-Introduction
-------------
+1. Every time findViewById() is called, it traverses the view hierarchy.
+2. findViewById() runs on the main or UI thread.
+3. These calls can slow down the user interface.
+4. Your app is less likely to crash.
 
-This starter app provides the completed AboutMe code.
-You will modify the app to use data binding techniques to
-eliminate calls to findViewById() and access data directly
-from views.
+R: 1
 
-Pre-requisites
---------------
+### Question 2
+How would you describe data binding?
 
-You need to know:
-- How to open, build, and run apps with Android Studio.
-- How to create a basic app with one Activity and one layout
- that uses TextView, ScrollView, Button, EditText, and LinearLayout.
-- How to add a click handler to a Button.
+For example, here are some things you could say about data binding:
 
-Getting Started
----------------
+1. The big idea about data binding is to create an object that connects/maps/binds two pieces of distant information together at compile time, so that you don't have to look for the data at runtime.
+2. The object that surfaces these bindings to you is called the binding object.
+3. The binding object is created by the compiler.
 
-1. Download and run the app.
+R: 1
 
-License
--------
+### Question 3
+Which of the following is NOT a benefit of data binding?
 
-Copyright 2018 Google, Inc.
+1. Code is shorter, easier to read, and easier to maintain.
+2. Data and views are clearly separated.
+3. The Android system only traverses the view hierarchy once to get each view.
+4. Calling findViewById() generates a compiler error.
+5. Type safety for accessing views.
 
-Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements.  See the NOTICE file distributed with this work for
-additional information regarding copyright ownership.  The ASF licenses this
-file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License.  You may obtain a copy of
-the License at
+R: 4
 
-  http://www.apache.org/licenses/LICENSE-2.0
+### Question 4
+What is the function of the <layout> tag?
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
-License for the specific language governing permissions and limitations under
-the License.
+1. You wrap it around your root view in the layout.
+2. Bindings are created for all the views in a layout.
+3. It designates the top-level view in an XML layout that uses data binding.
+4. You can use the <data> tag in inside a <layout> to bind a variable to a data class.
+
+R: 3
+
+### Question 5
+Which is the correct way to reference bound data in the XML layout?
+
+1. `android:text="@={myDataClass.property}"`
+2. `android:text="@={myDataClass}"`
+3. `android:text="@={myDataClass.property.toString()}"`
+4. `android:text="@={myDataClass.bound_data.property}"`
+
+R: 1
