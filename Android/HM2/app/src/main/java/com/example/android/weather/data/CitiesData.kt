@@ -11,47 +11,47 @@ object CitiesData {
         return arrayListOf(
             City(
                 id = 1,
-                titleResourceId = R.string.baseball,
+                titleResourceId = R.string.aveiro,
             ),
             City(
                 id = 2,
-                titleResourceId = R.string.badminton,
+                titleResourceId = R.string.porto,
             ),
             City(
                 id = 3,
-                titleResourceId = R.string.basketball,
+                titleResourceId = R.string.lisboa,
             ),
             City(
                 id = 4,
-                titleResourceId = R.string.bowling,
+                titleResourceId = R.string.braga,
             ),
             City(
                 id = 5,
-                titleResourceId = R.string.cycling,
+                titleResourceId = R.string.esmoriz,
             ),
             City(
                 id = 6,
-                titleResourceId = R.string.golf,
+                titleResourceId = R.string.espinho,
             ),
             City(
                 id = 7,
-                titleResourceId = R.string.running,
+                titleResourceId = R.string.paramos,
             ),
             City(
                 id = 8,
-                titleResourceId = R.string.soccer,
+                titleResourceId = R.string.londres,
             ),
             City(
                 id = 9,
-                titleResourceId = R.string.swimming,
+                titleResourceId = R.string.barcelona,
             ),
             City(
                 id = 10,
-                titleResourceId = R.string.table_tennis,
+                titleResourceId = R.string.valadares,
             ),
             City(
                 id = 11,
-                titleResourceId = R.string.tennis,
+                titleResourceId = R.string.cortegaça,
             )
         )
     }

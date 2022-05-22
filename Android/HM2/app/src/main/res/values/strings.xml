@@ -26,15 +26,15 @@
         diam fringilla tellus, eu euismod mauris neque at neque.</string>
     />
 
-    <string name="baseball">Baseball</string>
-    <string name="badminton">Badminton</string>
-    <string name="basketball">Basketball</string>
-    <string name="bowling">Bowling</string>
-    <string name="cycling">Cycling</string>
-    <string name="golf">Golf</string>
-    <string name="running">Running</string>
-    <string name="soccer">Soccer</string>
-    <string name="swimming">Swimming</string>
-    <string name="table_tennis">Table Tennis</string>
-    <string name="tennis">Tennis</string>
+    <string name="aveiro">Aveiro</string>
+    <string name="porto">Porto</string>
+    <string name="lisboa">Lisboa</string>
+    <string name="braga">Braga</string>
+    <string name="esmoriz">Esmoriz</string>
+    <string name="espinho">Espinho</string>
+    <string name="paramos">Paramos</string>
+    <string name="londres">Londres</string>
+    <string name="barcelona">Barcelona</string>
+    <string name="valadares">Valadares</string>
+    <string name="cortegaça">Cortegaça</string>
 </resources>
