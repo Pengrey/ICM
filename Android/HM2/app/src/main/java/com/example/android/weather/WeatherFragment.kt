@@ -32,7 +32,7 @@ class WeatherFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return FragmentWeatherBinding.inflate(inflater, container, false).root
     }
 
@@ -44,6 +44,8 @@ class WeatherFragment : Fragment() {
         // changes.
         weatherViewModel.currentCity.observe(this.viewLifecycleOwner) {
             binding.titleDetail.text = getString(it.titleResourceId)
+            binding.newsDetail.text = it.weatherFor
         }
     }
 }
+
