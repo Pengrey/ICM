@@ -2,7 +2,8 @@
     <string name="app_name">IcmTqsProject</string>
     <string name="don_t_have_an_account_register">Don\'t have an account? Register</string>
     <string name="password">password</string>
-    <string name="email_address">email_address</string>
+    <string name="email_address">email address</string>
     <string name="forgot_password">forgot password</string>
     <string name="company_logo">company logo</string>
+    <string name="sign_in">Sign in</string>
 </resources>

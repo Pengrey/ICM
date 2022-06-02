@@ -15,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:fontFamily="@font/poppins"
         android:text="@string/forgot_password"
         android:textAlignment="center"
         android:textColor="#A8FFFFFF"
@@ -32,10 +31,9 @@
         android:layout_width="300dp"
         android:layout_height="53dp"
         android:background="@drawable/login_button"
-        android:fontFamily="@font/poppins_semibold"
         android:text="@string/sign_in"
         android:textAlignment="center"
-        android:textColor="#FDFFFFFF"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
@@ -55,7 +53,8 @@
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutEmail"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutEmail"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35000002"" />
+        app:layout_constraintVertical_bias="0.35000002"
+        app:srcCompat="@drawable/logo" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmail"
@@ -63,7 +62,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/textfields"
         android:hint="@string/email_address"
-        android:textColorHint="#A8FFFFFF"
+        android:textColorHint="@color/purple_200"
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
@@ -82,12 +81,11 @@
             android:background="#00000000"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:fontFamily="@font/poppins_semibold"
             android:importantForAutofill="yes"
             android:includeFontPadding="true"
             android:inputType="textEmailAddress"
             android:padding="15dp"
-            android:textColor="@color/twilight_blue"
+            android:textColor="@color/purple_200"
             app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,7 +96,7 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/textfields"
         android:hint="@string/password"
-        android:textColorHint="#A8FFFFFF"
+        android:textColorHint="@color/purple_200"
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
@@ -108,7 +106,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail"
         app:layout_constraintVertical_bias="0.0"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="#A8FFFFFF">
+        app:passwordToggleTint="@color/purple_200">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextTextPassword4"
@@ -118,12 +116,11 @@
             android:background="#00000000"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:fontFamily="@font/poppins_semibold"
             android:importantForAutofill="yes"
             android:includeFontPadding="true"
             android:inputType="textPassword"
             android:padding="15dp"
-            android:textColor="@color/twilight_blue"
+            android:textColor="@color/purple_200"
             app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,7 +128,6 @@
         android:id="@+id/textView"
         android:layout_width="294dp"
         android:layout_height="53dp"
-        android:fontFamily="@font/poppins_semibold"
         android:gravity="center"
         android:text="@string/don_t_have_an_account_register"
         android:textColor="#A8FFFFFF"
