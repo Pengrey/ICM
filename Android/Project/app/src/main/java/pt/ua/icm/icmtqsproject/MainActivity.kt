@@ -21,8 +21,15 @@ class MainActivity : AppCompatActivity() {
         // Check if logged in already or not
         val riderId: String? = sharedPreferences.getString("riderId", "")
         if (riderId != "") {
-            val intent = Intent(this, HomePage::class.java)
-            startActivity(intent)
+            // Go to admin page if logged in as admin
+            if (riderId  == "admin@gmail.com") {
+                val intent = Intent(this, AdminPage::class.java)
+                startActivity(intent)
+            }else{
+                // Go to home page if logged in already
+                val intent = Intent(this, HomePage::class.java)
+                startActivity(intent)
+            }
         }
 
         // Text Fields
@@ -54,16 +61,30 @@ class MainActivity : AppCompatActivity() {
         val email: String = emailField.text.toString()
         val password: String = passwordField.text.toString()
 
-        // Call login api endpoint
-        val riderId: String = "rider@email.com"
+        if (email == "admin@gmail.com") {
+            // Call login api endpoint for Admin
+            val adminId: String = "admin@gmail.com"
 
-        // Set on preferences
-        val editor = prefs.edit()
-        editor.putString("riderId", riderId)
-        editor.apply()
+            // Set on preferences
+            val editor = prefs.edit()
+            editor.putString("riderId", adminId)
+            editor.apply()
 
-        // Got to main page
-        val intent = Intent(this, HomePage::class.java)
-        startActivity(intent)
+            // Got to admin page
+            val intent = Intent(this, AdminPage::class.java)
+            startActivity(intent)
+        } else {
+            // Call login api endpoint for Rider
+            val riderId: String = "rider@email.com"
+
+            // Set on preferences
+            val editor = prefs.edit()
+            editor.putString("riderId", riderId)
+            editor.apply()
+
+            // Got to main page
+            val intent = Intent(this, HomePage::class.java)
+            startActivity(intent)
+        }
     }
 }
