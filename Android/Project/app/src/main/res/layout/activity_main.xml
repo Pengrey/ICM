@@ -84,7 +84,7 @@
             android:importantForAutofill="yes"
             android:includeFontPadding="true"
             android:inputType="textEmailAddress"
-            android:padding="15dp"
+            android:padding="20dp"
             android:textColor="@color/purple_200"
             app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -119,7 +119,7 @@
             android:importantForAutofill="yes"
             android:includeFontPadding="true"
             android:inputType="textPassword"
-            android:padding="15dp"
+            android:padding="20dp"
             android:textColor="@color/purple_200"
             app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
