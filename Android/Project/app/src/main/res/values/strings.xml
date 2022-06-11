@@ -17,6 +17,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="register">Register</string>
     <string name="cid_number">CID number</string>
+    <string name="API_URL">Insert-api-url-here</string>
 
     <!-- Lotus -->
     <string name="locus_rationale_title">Rationale Title</string>
