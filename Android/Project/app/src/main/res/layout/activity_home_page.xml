@@ -6,6 +6,7 @@
     <data>
         <variable name="welcomingText" type="String"/>
         <variable name="locationText" type="String"/>
+        <variable name="deliveryState" type="String"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,5 +35,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/welcomeText"
             app:layout_constraintVertical_bias="0.072" />
+
+        <Button
+            android:id="@+id/deliveryStateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentLocation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
