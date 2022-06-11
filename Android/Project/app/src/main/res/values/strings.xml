@@ -18,4 +18,12 @@
     <string name="register">Register</string>
     <string name="cid_number">CID number</string>
     <string name="API_URL">Insert-api-url-here</string>
+
+    <!-- Lotus -->
+    <string name="locus_rationale_title">Rationale Title</string>
+    <string name="locus_rationale_message">This is a rationale message.</string>
+    <string name="locus_permission_blocked_title">Permission Blocked Title</string>
+    <string name="locus_permission_blocked_message">This is a permission blocked message.</string>
+    <string name="locus_location_resolution_title">Permission Resolution Title</string>
+    <string name="locus_location_resolution_message">This is a permission resolution message.</string>
 </resources>
