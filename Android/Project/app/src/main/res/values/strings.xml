@@ -25,4 +25,8 @@
     <string name="locus_permission_blocked_message">This is a permission blocked message.</string>
     <string name="locus_location_resolution_title">Permission Resolution Title</string>
     <string name="locus_location_resolution_message">This is a permission resolution message.</string>
+
+    <!-- Notifs -->
+    <string name="channel_name">Qourier</string>
+    <string name="channel_description">Riders Work Assigned</string>
 </resources>
