@@ -1,5 +1,7 @@
 package pt.ua.icm.icmtqsproject.ui.home.adapter
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.location.Location
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +24,7 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
             textViewDistance = view.findViewById(R.id.textViewDistance)
         }
 
+        @SuppressLint("ResourceAsColor")
         fun bind(delivery: Delivery, startPoint: Location) {
             itemView.apply {
                 textViewDeliveryAddr.text = delivery.deliveryAddr
@@ -31,7 +34,21 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
                 val endPoint = Location("locationB")
                 endPoint.latitude = delivery.latitude
                 endPoint.longitude = delivery.longitude
-                textViewDistance.text = (startPoint.distanceTo(endPoint)/1000).roundToInt().toString() + "Km";
+
+                // Get distance and String
+                val distance: Int = (startPoint.distanceTo(endPoint)/1000).roundToInt()
+                val distanceStr = "$distance Km";
+
+                if (distance > 50){
+                    textViewDistance.text = distanceStr;
+                    textViewDistance.setTextColor(Color.RED)
+                } else if (distance in 10..50) {
+                    textViewDistance.text = distanceStr;
+                    textViewDistance.setTextColor(R.color.orange)
+                }else {
+                    textViewDistance.text = distanceStr;
+                    textViewDistance.setTextColor(Color.GREEN)
+                }
             }
         }
     }

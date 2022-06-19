@@ -30,4 +30,12 @@
     <!-- Notifs -->
     <string name="channel_name">Qourier</string>
     <string name="channel_description">Riders Work Assigned</string>
+    <string name="rider_ph">Rider Name</string>
+    <string name="distance_ph">22Km</string>
+    <string name="customer_ph">#3</string>
+    <string name="origin_ph">OriginPH</string>
+    <string name="delivery_ph">DeliveryPH</string>
+    <string name="state_ph">F</string>
+    <string name="origin_label">Origin:</string>
+    <string name="dest_label">Dest:</string>
 </resources>
