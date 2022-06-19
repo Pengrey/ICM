@@ -1,6 +1,7 @@
 package pt.ua.icm.icmtqsproject.ui.home.view
 
 import android.content.SharedPreferences
+import android.location.Location
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
@@ -82,37 +83,48 @@ class HomePage : AppCompatActivity() {
 
         // Recycler view api call
         setupViewModel()
+        Locus.getCurrentLocation(this) { result ->
+            result.location?.let {
+                // Recycler View
+                viewModel.getDeliveries().observe(this, Observer {
 
-        viewModel.getDeliveries().observe(this, Observer {
+                    val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+                    val progressBar: ProgressBar = findViewById(R.id.progressBar)
 
-            val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-            val progressBar: ProgressBar = findViewById(R.id.progressBar)
+                    // Used to get Distance
+                    val startPoint = Location("locationA")
+                    startPoint.latitude = result.location!!.latitude
+                    startPoint.longitude = result.location!!.longitude
 
-            it?.let { resource ->
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        println("SUCCESS")
-                        println("Data retrieved: " + resource.data)
-                        recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>)
-                        recyclerView.layoutManager = LinearLayoutManager(this)
-                        recyclerView.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
-                        retrieveList(resource.data)
+                    it?.let { resource ->
+                        when (resource.status) {
+                            Status.SUCCESS -> {
+                                println("SUCCESS")
+                                println("Data retrieved: " + resource.data)
+                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint)
+                                recyclerView.layoutManager = LinearLayoutManager(this)
+                                recyclerView.visibility = View.VISIBLE
+                                progressBar.visibility = View.GONE
+                                retrieveList(resource.data)
+                            }
+                            Status.ERROR -> {
+                                println("ERROR")
+                                recyclerView.visibility = View.VISIBLE
+                                progressBar.visibility = View.GONE
+                                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                            }
+                            Status.LOADING -> {
+                                println("LOADING")
+                                progressBar.visibility = View.VISIBLE
+                                recyclerView.visibility = View.GONE
+                            }
+                        }
                     }
-                    Status.ERROR -> {
-                        println("ERROR")
-                        recyclerView.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
-                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                    }
-                    Status.LOADING -> {
-                        println("LOADING")
-                        progressBar.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
-                    }
-                }
+                })
+
             }
-        })
+            result.error?.let { /* Received error! */ }
+        }
     }
 }
 
