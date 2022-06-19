@@ -4,8 +4,6 @@
     package="pt.ua.icm.icmtqsproject"
     >
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -23,19 +21,19 @@
         android:theme="@style/Theme.IcmTqsProject"
         tools:targetApi="31">
         <activity
-            android:name=".AdminPage"
+            android:name=".ui.AdminPage"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".RegisterPage"
+            android:name=".ui.RegisterPage"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".HomePage"
+            android:name="pt.ua.icm.icmtqsproject.ui.home.view.HomePage"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -45,5 +43,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

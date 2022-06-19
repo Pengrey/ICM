@@ -1,4 +1,4 @@
-package pt.ua.icm.icmtqsproject
+package pt.ua.icm.icmtqsproject.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.Button
 import android.widget.EditText
+import pt.ua.icm.icmtqsproject.R
+import pt.ua.icm.icmtqsproject.ui.home.view.HomePage
 
 class RegisterPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

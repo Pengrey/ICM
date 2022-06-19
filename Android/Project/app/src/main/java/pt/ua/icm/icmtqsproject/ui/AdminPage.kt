@@ -1,7 +1,8 @@
-package pt.ua.icm.icmtqsproject
+package pt.ua.icm.icmtqsproject.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import pt.ua.icm.icmtqsproject.R
 
 class AdminPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
