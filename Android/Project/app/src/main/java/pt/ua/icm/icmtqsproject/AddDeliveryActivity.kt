@@ -1,19 +1,12 @@
 package pt.ua.icm.icmtqsproject
 
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.birjuvachhani.locus.Locus
-import pt.ua.icm.icmtqsproject.data.model.Delivery
-import pt.ua.icm.icmtqsproject.ui.home.adapter.HomeAdapter
-import pt.ua.icm.icmtqsproject.utils.Status
+import pt.ua.icm.icmtqsproject.data.model.NewDelivery
 
 class AddDeliveryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +39,20 @@ class AddDeliveryActivity : AppCompatActivity() {
         }
 
         saveButton.setOnClickListener {
+            val customerId = customerIDValue.text.toString()
+            val deliveryAddress = deliveryAddressValue.text.toString()
+            val originAddress = originAddressValue.text.toString()
+            val latitude = latValue.text.toString()
+            val longitude = longValue.text.toString()
+
+
+            if(customerId.isNotEmpty() && deliveryAddress.isNotEmpty() && originAddress.isNotEmpty() && latitude.isNotEmpty() && longitude.isNotEmpty()) {
+                val newDelivery: NewDelivery = NewDelivery(customerId, deliveryAddress, originAddress, latitude, longitude)
+                Toast.makeText(applicationContext, "Delivery Added", Toast.LENGTH_SHORT).show()
+                println(newDelivery)
+                // TODO: API CALL
+                this.finish()
+            }
         }
 
         cancelButton.setOnClickListener {
