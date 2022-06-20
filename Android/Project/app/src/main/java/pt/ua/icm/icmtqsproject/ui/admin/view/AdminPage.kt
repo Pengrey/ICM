@@ -1,6 +1,7 @@
 package pt.ua.icm.icmtqsproject.ui.admin.view
 
 import android.app.Dialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,8 +13,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.birjuvachhani.locus.Locus
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import pt.ua.icm.icmtqsproject.AddDeliveryActivity
 import pt.ua.icm.icmtqsproject.R
 import pt.ua.icm.icmtqsproject.data.api.ApiHelper
 import pt.ua.icm.icmtqsproject.data.api.RetrofitBuilder
@@ -44,6 +47,13 @@ class AdminPage : AppCompatActivity(), AdminAdapter.AdminAdapterCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_page)
+
+        // Assign function to add button
+        val addDeliveryButtons: FloatingActionButton = findViewById(R.id.floatingActionButton)
+        addDeliveryButtons.setOnClickListener {
+            val intent = Intent(this, AddDeliveryActivity::class.java)
+            startActivity(intent)
+        }
 
         // Recycler view api call
         setupViewModel()

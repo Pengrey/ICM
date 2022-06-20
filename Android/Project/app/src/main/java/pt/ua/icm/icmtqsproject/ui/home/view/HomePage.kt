@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.birjuvachhani.locus.Locus
-import io.karn.notify.Notify
 import pt.ua.icm.icmtqsproject.R
 import pt.ua.icm.icmtqsproject.data.api.ApiHelper
 import pt.ua.icm.icmtqsproject.data.api.RetrofitBuilder
@@ -46,7 +45,7 @@ class HomePage : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding :  ActivityHomePageBinding=
+        val binding : ActivityHomePageBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_home_page)
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
