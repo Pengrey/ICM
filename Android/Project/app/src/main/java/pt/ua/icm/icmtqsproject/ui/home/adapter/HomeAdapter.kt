@@ -13,10 +13,10 @@ import pt.ua.icm.icmtqsproject.data.model.Delivery
 import kotlin.math.roundToInt
 
 class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val startPoint: Location) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
-    class ViewHolder(view: View, startPoint: Location) : RecyclerView.ViewHolder(view) {
-        val textViewDeliveryAddr: TextView
-        val textViewOriginAddr: TextView
-        val textViewDistance: TextView
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val textViewDeliveryAddr: TextView
+        private val textViewOriginAddr: TextView
+        private val textViewDistance: TextView
 
         init {
             textViewDeliveryAddr = view.findViewById(R.id.textViewDeliveryAddr)
@@ -57,7 +57,7 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.item_layout, viewGroup, false)
 
-        return ViewHolder(view, startPoint)
+        return ViewHolder(view)
     }
 
     override fun getItemCount() = deliveries.size
