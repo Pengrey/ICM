@@ -37,16 +37,16 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
 
                 // Get distance and String
                 val distance: Int = (startPoint.distanceTo(endPoint)/1000).roundToInt()
-                val distanceStr = "$distance Km";
+                val distanceStr = "$distance Km"
 
                 if (distance > 50){
-                    textViewDistance.text = distanceStr;
+                    textViewDistance.text = distanceStr
                     textViewDistance.setTextColor(Color.RED)
                 } else if (distance in 10..50) {
-                    textViewDistance.text = distanceStr;
+                    textViewDistance.text = distanceStr
                     textViewDistance.setTextColor(R.color.orange)
                 }else {
-                    textViewDistance.text = distanceStr;
+                    textViewDistance.text = distanceStr
                     textViewDistance.setTextColor(Color.GREEN)
                 }
             }
