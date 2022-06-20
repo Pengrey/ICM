@@ -51,36 +51,6 @@ class HomePage : AppCompatActivity() {
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-        // Delivery State Button
-        val deliveryStateButton: Button = findViewById(R.id.deliveryStateButton)
-
-        deliveryStateButton.setOnClickListener{
-            Locus.getCurrentLocation(this) { result ->
-                result.location?.let {
-                    // Bind Location to text on page
-                    binding.locationText = "${result.location!!.latitude}, ${result.location!!.longitude}"
-
-                    // Notification
-                    Notify
-                        .with(this)
-                        .content { // this: Payload.Content.Default
-                            title = "Work assigned successfully"
-                            text = "The delivery you showed interest, was assigned to you."
-                        }
-                        .show()
-                }
-                result.error?.let { /* Received error! */ }
-            }
-        }
-
-        // Bind Id to text on page
-        val riderId: String? = sharedPreferences.getString("riderId", "")
-        if (riderId != "") {
-            binding.welcomingText = "$riderId"
-        }else{
-            binding.welcomingText = "No Rider!"
-        }
-
         // Recycler view api call
         setupViewModel()
         Locus.getCurrentLocation(this) { result ->
