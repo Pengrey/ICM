@@ -38,4 +38,6 @@
     <string name="state_ph">F</string>
     <string name="origin_label">Origin:</string>
     <string name="dest_label">Dest:</string>
+    <string name="customerid">CustomerId</string>
+    <string name="custid">CId:</string>
 </resources>

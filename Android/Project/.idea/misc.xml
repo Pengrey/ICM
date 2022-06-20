@@ -5,11 +5,13 @@
       <map>
         <entry key="app/src/main/res/drawable/textfields.xml" value="0.3575" />
         <entry key="app/src/main/res/layout/activity_admin_page.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_home_page.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main_page2.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/activity_register_page.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/item_layout.xml" value="0.7265822784810126" />
+        <entry key="app/src/main/res/layout/item_admin_layout.xml" value="0.7444876783398184" />
+        <entry key="app/src/main/res/layout/item_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/qr_code_popup.xml" value="0.3564356435643564" />
       </map>
     </option>
   </component>

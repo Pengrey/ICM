@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import pt.ua.icm.icmtqsproject.R
+import pt.ua.icm.icmtqsproject.ui.admin.view.AdminPage
 import pt.ua.icm.icmtqsproject.ui.home.view.HomePage
 
 class MainActivity : AppCompatActivity() {
