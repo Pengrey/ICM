@@ -21,10 +21,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.622" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -33,12 +33,42 @@
         android:contentDescription="@string/company_logo"
         android:scaleType="fitCenter"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEmail"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutEmail"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutEmail"
+        app:layout_constraintBottom_toTopOf="@+id/textInputName"
+        app:layout_constraintEnd_toEndOf="@+id/textInputName"
+        app:layout_constraintStart_toStartOf="@+id/textInputName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.35000002"
         app:srcCompat="@drawable/logo" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputName"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textfields"
+        android:hint="@string/name"
+        android:textColorHint="@color/purple_200"
+        app:boxStrokeColor="#26212E"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:layout_constraintBottom_toTopOf="@id/textInputLayoutEmail"
+        app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill"
+            android:background="#00000000"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:importantForAutofill="yes"
+            android:includeFontPadding="true"
+            android:inputType="text"
+            android:padding="20dp"
+            android:textColor="@color/purple_200"
+            app:textInputLayoutFocusedRectEnabled="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmail"
@@ -50,12 +80,9 @@
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.28">
+        app:layout_constraintBottom_toTopOf="@id/textInputLayoutCID"
+        app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editEmailAddress"
@@ -70,7 +97,7 @@
             android:inputType="textEmailAddress"
             android:padding="20dp"
             android:textColor="@color/purple_200"
-            app:textInputLayoutFocusedRectEnabled="true" />
+            app:textInputLayoutFocusedRectEnabled="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -84,10 +111,9 @@
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
-        app:layout_constraintBottom_toBottomOf="@id/textInputLayout"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutEmail"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutEmail"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
+        app:layout_constraintBottom_toTopOf="@id/textInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editCID"
@@ -116,11 +142,9 @@
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutCID"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutCID"
-        app:layout_constraintStart_toStartOf="@+id/textInputLayoutCID"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCID"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/RegisterButton"
+        app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/purple_200">
 

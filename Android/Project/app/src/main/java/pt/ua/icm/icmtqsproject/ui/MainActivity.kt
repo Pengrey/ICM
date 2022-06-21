@@ -3,12 +3,21 @@ package pt.ua.icm.icmtqsproject.ui
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import pt.ua.icm.icmtqsproject.R
+import pt.ua.icm.icmtqsproject.data.model.LoginRequest
+import pt.ua.icm.icmtqsproject.data.model.Rider
 import pt.ua.icm.icmtqsproject.ui.admin.view.AdminPage
 import pt.ua.icm.icmtqsproject.ui.home.view.HomePage
 
@@ -16,6 +25,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Api stuff
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -64,29 +77,54 @@ class MainActivity : AppCompatActivity() {
         val password: String = passwordField.text.toString()
 
         if (email == "admin@gmail.com") {
-            // Call login api endpoint for Admin
-            val adminId: String = "admin@gmail.com"
-
-            // Set on preferences
-            val editor = prefs.edit()
-            editor.putString("riderId", adminId)
-            editor.apply()
-
-            // Got to admin page
-            val intent = Intent(this, AdminPage::class.java)
-            startActivity(intent)
-        } else {
-            // Call login api endpoint for Rider
-            // TODO
 
             // Set on preferences
             val editor = prefs.edit()
             editor.putString("riderId", email)
             editor.apply()
 
-            // Got to main page
-            val intent = Intent(this, HomePage::class.java)
+            // Got to admin page
+            val intent = Intent(this, AdminPage::class.java)
             startActivity(intent)
+        } else {
+            // Call login api endpoint
+            if (email.isNotEmpty() && password.isNotEmpty()){
+                // Create Rider
+                val loginRequest: LoginRequest = LoginRequest(email,password)
+                val json: String = Gson().toJson(loginRequest)
+
+                // Call Api to get register
+                val client = OkHttpClient()
+
+                val mediaType = "application/json".toMediaTypeOrNull()
+                val body = RequestBody.create(mediaType, json)
+                val request = Request.Builder()
+                    .url("http://51.142.110.251/api/v1/accounts/login")
+                    .post(body)
+                    .build()
+
+                val response = client.newCall(request).execute()
+                //println("RESPONSE: " + response)
+                if(response.code == 202){
+                    // Get auth token
+                    val token = ""
+
+                    // Set on preferences
+                    val editor = prefs.edit()
+                    editor.putString("riderId", email)
+                    editor.putString("authToken", token)
+                    editor.apply()
+
+                    // Got to right page
+                    val intent = Intent(this, HomePage::class.java)
+
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(applicationContext, "Wrong password", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(applicationContext, "Fill all fields", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

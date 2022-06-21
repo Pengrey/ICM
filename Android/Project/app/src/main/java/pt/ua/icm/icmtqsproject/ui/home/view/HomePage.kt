@@ -97,6 +97,7 @@ class HomePage : AppCompatActivity() {
                                 recyclerView.visibility = View.VISIBLE
                                 progressBar.visibility = View.GONE
                                 Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                                println(it.message)
                             }
                             Status.LOADING -> {
                                 println("LOADING")
@@ -122,8 +123,6 @@ class HomePage : AppCompatActivity() {
                             when (resource.status) {
                                 Status.SUCCESS -> {
                                     println("SUCCESS")
-                                    println("Data retrieved: " + resource.data)
-                                    println("RIDERID: " + sharedPreferences.getString("riderId", ""))
                                     if (resource.data?.any { delivery -> delivery.riderId == sharedPreferences.getString("riderId", "") } == true){
                                         // Notification
                                         Notify
