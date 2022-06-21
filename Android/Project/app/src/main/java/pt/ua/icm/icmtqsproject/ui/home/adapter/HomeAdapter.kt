@@ -10,10 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pt.ua.icm.icmtqsproject.R
 import pt.ua.icm.icmtqsproject.data.model.Delivery
-import pt.ua.icm.icmtqsproject.ui.admin.adapter.AdminAdapter
 import kotlin.math.roundToInt
 
-class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val startPoint: Location, private val homeAdapterCallback: HomeAdapter.HomeAdapterCallback) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val startPoint: Location) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val textViewDeliveryAddr: TextView
         private val textViewOriginAddr: TextView
@@ -63,23 +62,8 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
 
     override fun getItemCount() = deliveries.size
 
-
-    /*
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(deliveries[position])
-        holder.itemView.setOnClickListener {
-            adminAdapterCallback.onAdminAdapterClick(deliveries[position])
-        }
-    }
-*/
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(deliveries[position], startPoint)
-        holder.itemView.setOnClickListener{
-            homeAdapterCallback.onHomeAdapterClick(deliveries[position])
-        }
     }
-    interface HomeAdapterCallback{
-        fun onHomeAdapterClick(currentItem:Delivery)
 
-    }
 }

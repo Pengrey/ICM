@@ -1,6 +1,5 @@
 package pt.ua.icm.icmtqsproject.ui.home.view
 
-import android.app.Dialog
 import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
@@ -21,14 +20,13 @@ import pt.ua.icm.icmtqsproject.data.api.ApiHelper
 import pt.ua.icm.icmtqsproject.data.api.RetrofitBuilder
 import pt.ua.icm.icmtqsproject.data.model.Delivery
 import pt.ua.icm.icmtqsproject.databinding.ActivityHomePageBinding
-import pt.ua.icm.icmtqsproject.ui.admin.adapter.AdminAdapter
 import pt.ua.icm.icmtqsproject.ui.base.ViewModelFactory
 import pt.ua.icm.icmtqsproject.ui.home.adapter.HomeAdapter
 import pt.ua.icm.icmtqsproject.ui.home.viewmodel.HomePageViewModel
 import pt.ua.icm.icmtqsproject.utils.Status
 
 
-class HomePage : AppCompatActivity(), HomeAdapter.HomeAdapterCallback {
+class HomePage : AppCompatActivity() {
     private lateinit var viewModel: HomePageViewModel
     private lateinit var adapter: HomeAdapter
 
@@ -72,7 +70,7 @@ class HomePage : AppCompatActivity(), HomeAdapter.HomeAdapterCallback {
                             Status.SUCCESS -> {
                                 println("SUCCESS")
                                 println("Data retrieved: " + resource.data)
-                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint,this)
+                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint)
                                 recyclerView.layoutManager = LinearLayoutManager(this)
                                 recyclerView.visibility = View.VISIBLE
                                 progressBar.visibility = View.GONE
@@ -97,14 +95,5 @@ class HomePage : AppCompatActivity(), HomeAdapter.HomeAdapterCallback {
             result.error?.let { /* Received error! */ }
         }
     }
-
-    override fun onHomeAdapterClick(currentItem: Delivery)
-    {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.home_delivery_popup)
-
-
-    }
-
 }
 
