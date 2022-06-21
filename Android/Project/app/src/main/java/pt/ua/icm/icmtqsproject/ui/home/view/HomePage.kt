@@ -1,12 +1,15 @@
 package pt.ua.icm.icmtqsproject.ui.home.view
 
 import android.content.Intent
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -30,13 +33,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomePage : AppCompatActivity() {
+class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
     private lateinit var viewModel: HomePageViewModel
     private lateinit var adapter: HomeAdapter
     private lateinit var timer: Timer
     private val noDelay = 0L
     private val everyFiveSeconds = 5000L
 
+    private var hasStartedDelivery :Boolean = false
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(
             this,
@@ -54,11 +58,13 @@ class HomePage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
+        hasStartedDelivery = false
         // Check if Rider is already assigned to work
         val isAssigned = sharedPreferences.getString("isAssigned", "")
         if (isAssigned.equals("true")){
             val intent = Intent(this, DeliveriesTrackingActivity::class.java)
+            println("EXECUTING NYMBER 1")
+            hasStartedDelivery = true
             startActivity(intent)
         }
 
@@ -86,7 +92,7 @@ class HomePage : AppCompatActivity() {
                             Status.SUCCESS -> {
                                 println("SUCCESS")
                                 println("Data retrieved: " + resource.data)
-                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint)
+                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint,this)
                                 recyclerView.layoutManager = LinearLayoutManager(this)
                                 recyclerView.visibility = View.VISIBLE
                                 progressBar.visibility = View.GONE
@@ -163,15 +169,33 @@ class HomePage : AppCompatActivity() {
 
         timer.cancel()
         timer.purge()
+
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         // Check if Rider is already assigned to work
         val isAssigned = sharedPreferences.getString("isAssigned", "")
-        if (isAssigned.equals("true")){
-            val intent = Intent(this, DeliveriesTrackingActivity::class.java)
+        if (isAssigned.equals("true") and !hasStartedDelivery){
+            val intent = Intent(this,  DeliveriesTrackingActivity::class.java)
+            println("EXECUTING NYMBER 2")
             startActivity(intent)
         }
+    }
+    override fun onHomeAdapterClick(currentItem: Delivery)
+    {
+        println(currentItem)
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.home_delivery_popup)
+        val origin : TextView =dialog.findViewById(R.id.originAddress)
+        val dest: TextView = dialog.findViewById(R.id.deliverAddress)
+        val acceptButton : Button = dialog.findViewById(R.id.DeliveryBigButton)
+
+        origin.text = currentItem.originAddr
+        dest.text = currentItem.deliveryAddr
+        acceptButton.setOnClickListener{
+
+        }
+        dialog.show()
     }
 }
 
