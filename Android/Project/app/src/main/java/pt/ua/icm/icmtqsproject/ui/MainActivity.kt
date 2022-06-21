@@ -77,11 +77,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         } else {
             // Call login api endpoint for Rider
-            val riderId: String = "rider@email.com"
+            // TODO
 
             // Set on preferences
             val editor = prefs.edit()
-            editor.putString("riderId", riderId)
+            editor.putString("riderId", email)
             editor.apply()
 
             // Got to main page

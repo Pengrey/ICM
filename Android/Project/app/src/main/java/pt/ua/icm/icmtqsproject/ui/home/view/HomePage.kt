@@ -116,6 +116,7 @@ class HomePage : AppCompatActivity() {
                                 Status.SUCCESS -> {
                                     println("SUCCESS")
                                     println("Data retrieved: " + resource.data)
+                                    println("RIDERID: " + sharedPreferences.getString("riderId", ""))
                                     if (resource.data?.any { delivery -> delivery.riderId == sharedPreferences.getString("riderId", "") } == true){
                                         // Notification
                                         Notify
@@ -125,6 +126,10 @@ class HomePage : AppCompatActivity() {
                                                 text = "The delivery you showed interest, was assigned to you."
                                             }
                                             .show()
+
+                                        // Stop timer
+                                        timer.cancel()
+                                        timer.purge()
                                     }
                                 }
                                 Status.ERROR -> {
