@@ -20,6 +20,9 @@
         android:theme="@style/Theme.IcmTqsProject"
         tools:targetApi="31">
         <activity
+            android:name=".DeliveriesTrackingActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddDeliveryActivity"
             android:exported="false" />
         <activity
