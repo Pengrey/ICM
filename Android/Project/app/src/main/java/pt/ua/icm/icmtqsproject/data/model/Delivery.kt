@@ -7,5 +7,6 @@ data class Delivery   (
     val latitude:Double,
     val longitude:Double,
     val deliveryState:String,
-    val deliveryId:Long
+    val deliveryId:Long,
+    val riderId:String
 )
