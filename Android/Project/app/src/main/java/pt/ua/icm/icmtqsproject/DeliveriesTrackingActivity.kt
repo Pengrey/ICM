@@ -106,7 +106,7 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     editor.apply()
 
                 }
-                "FETCHING" -> {
+                "SHIPPED" -> {
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "DELIVERED")
                     editor.apply()
