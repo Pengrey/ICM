@@ -65,10 +65,9 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(deliveries[position], startPoint)
         holder.itemView.setOnClickListener{
-            homeAdapterCallback.onHomeAdapterClick(deliveries[position])
+            homeAdapterCallback.onHomeAdapterClick(deliveries[position], startPoint)
         }
     }
     interface HomeAdapterCallback{
-        fun onHomeAdapterClick(currentItem:Delivery)
-
+        fun onHomeAdapterClick(currentItem:Delivery, startPoint: Location)
     }}

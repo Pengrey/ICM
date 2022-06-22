@@ -18,19 +18,27 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.birjuvachhani.locus.Locus
+import com.google.gson.Gson
 import io.karn.notify.Notify
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import pt.ua.icm.icmtqsproject.R
 import pt.ua.icm.icmtqsproject.data.api.ApiHelper
 import pt.ua.icm.icmtqsproject.data.api.RetrofitBuilder
 import pt.ua.icm.icmtqsproject.data.model.Delivery
 import pt.ua.icm.icmtqsproject.databinding.ActivityHomePageBinding
 import pt.ua.icm.icmtqsproject.DeliveriesTrackingActivity
+import pt.ua.icm.icmtqsproject.data.model.Bid
+import pt.ua.icm.icmtqsproject.data.model.NewDelivery
 import pt.ua.icm.icmtqsproject.ui.base.ViewModelFactory
 import pt.ua.icm.icmtqsproject.ui.home.adapter.HomeAdapter
 import pt.ua.icm.icmtqsproject.ui.home.viewmodel.HomePageViewModel
 import pt.ua.icm.icmtqsproject.utils.Status
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
 class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
@@ -63,7 +71,6 @@ class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
         val isAssigned = sharedPreferences.getString("isAssigned", "")
         if (isAssigned.equals("true")){
             val intent = Intent(this, DeliveriesTrackingActivity::class.java)
-            println("EXECUTING NYMBER 1")
             hasStartedDelivery = true
             startActivity(intent)
         }
@@ -142,6 +149,13 @@ class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
                                         // Set on preferences
                                         val editor = sharedPreferences.edit()
                                         editor.putString("isAssigned", "true")
+                                        val deliveryAssigned: Delivery? = resource.data.find { delivery -> delivery.riderId == sharedPreferences.getString("riderId", "")   }
+                                        if (deliveryAssigned != null) {
+                                            editor.putString("deliveryId",deliveryAssigned.deliveryId.toString())
+                                        }
+                                        if (deliveryAssigned != null) {
+                                            editor.putString("deliveryAddr",deliveryAssigned.deliveryId.toString())
+                                        }
                                         editor.apply()
 
                                         onPause()
@@ -175,25 +189,64 @@ class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
 
         // Check if Rider is already assigned to work
         val isAssigned = sharedPreferences.getString("isAssigned", "")
+        println("ASSIGNED: " + isAssigned)
+        println("hasStartedDelivery: " +  hasStartedDelivery)
         if (isAssigned.equals("true") and !hasStartedDelivery){
             val intent = Intent(this,  DeliveriesTrackingActivity::class.java)
-            println("EXECUTING NYMBER 2")
             startActivity(intent)
         }
     }
-    override fun onHomeAdapterClick(currentItem: Delivery)
+    override fun onHomeAdapterClick(currentItem: Delivery, startPoint: Location)
     {
+        // Shared Preferences
+        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val riderId: String? = sharedPreferences.getString("riderId", "")
+
         println(currentItem)
+
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.home_delivery_popup)
+
         val origin : TextView =dialog.findViewById(R.id.originAddress)
         val dest: TextView = dialog.findViewById(R.id.deliverAddress)
         val acceptButton : Button = dialog.findViewById(R.id.DeliveryBigButton)
 
         origin.text = currentItem.originAddr
         dest.text = currentItem.deliveryAddr
+
+        // Get distance
+        // Calculate distance
+        val endPoint = Location("locationB")
+        endPoint.latitude = currentItem.latitude
+        endPoint.longitude = currentItem.longitude
+
+        // Get distance and String
+        val distance: Double = (startPoint.distanceTo(endPoint)/1000).toDouble()
+
         acceptButton.setOnClickListener{
 
+            // Create Bid
+            val bid: Bid = Bid(riderId.toString(), currentItem.deliveryId, distance)
+            val json: String = Gson().toJson(bid)
+
+            // Call Api to get register
+            val client = OkHttpClient()
+
+            val mediaType = "application/json".toMediaTypeOrNull()
+            val body = RequestBody.create(mediaType, json)
+            val request = Request.Builder()
+                .url("http://51.142.110.251/api/v1/deliveries/bid?basicAuth=" + Base64.getEncoder().encodeToString(riderId.toString().toByteArray()))
+                .post(body)
+                .build()
+            // println(json)
+            val response = client.newCall(request).execute()
+            // println("RESPONSE: " + response)
+            if(response.code == 201){
+                Toast.makeText(applicationContext, "Bid Added", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            } else {
+                Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
+            }
         }
         dialog.show()
     }
