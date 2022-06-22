@@ -143,7 +143,6 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     stage1img.visibility = View.INVISIBLE
                     deliveryStage = "SCAN"
                     // finishButton.background.colorFilter = BlendModeColorFilter(R.color.blue, BlendMode.HUE)
-                    tooltip.visibility = View.INVISIBLE
                     instruction.visibility = View.INVISIBLE
                     instructionLabel.visibility = View.INVISIBLE
 
@@ -156,6 +155,8 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     deliveryStage = "DELIVERED"
                     deliveryStatus.text = "Completed"
                     finishButton.text = "Go Back"
+                    tooltip.visibility = View.INVISIBLE
+
                 }
                 "DELIVERED" -> {
 
