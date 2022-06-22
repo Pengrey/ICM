@@ -10,7 +10,7 @@
         android:layout_width="407dp"
         android:layout_height="152dp"
 
-        app:cardBackgroundColor="@color/purple_200"
+        app:cardBackgroundColor="#9E5EFA"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
@@ -28,6 +28,8 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:text="@string/distance_ph"
                 android:textSize="20sp"
+                android:textColor="#111111"
+
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +46,8 @@
                 android:text="@string/origin_label"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="#111111"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.051"
@@ -59,6 +63,7 @@
                 android:text="@string/dest_label"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="#111111"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.049"
@@ -74,6 +79,8 @@
                 android:text="@string/origin_ph"
                 android:textAlignment="viewStart"
                 android:textSize="20sp"
+                android:textColor="#111111"
+
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,6 +97,8 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:text="@string/delivery_ph"
                 android:textAlignment="viewStart"
+                android:textColor="#111111"
+
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -11,6 +11,7 @@ import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -33,7 +34,6 @@ import java.util.*
 
 
 class DeliveriesTrackingActivity : AppCompatActivity() {
-    val deliveryStages : List<String> = listOf("Fetched","Delivered","Finish")
 
     private fun doPostApi(deliveryId: String, riderId: String){
         // Call Api to get register
@@ -62,7 +62,9 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val riderId = sharedPreferences.getString("riderId", "").toString()
         val deliveryId = sharedPreferences.getString("deliveryId", "").toString()
-        val deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
+        var deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
+        var originAddr = sharedPreferences.getString("originAddr", "").toString()
+
         val deliveryStage = sharedPreferences.getString("deliveryStage", "").toString()
 
         // Layout stuff
@@ -70,6 +72,11 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         val instruction: TextView = findViewById(R.id.instructionContent)
         val tooltip: TextView = findViewById(R.id.tooltip)
         val instructionLabel :TextView = findViewById(R.id.instructionLabel)
+        val stage0img : ImageView = findViewById(R.id.stage0Image)
+        stage0img.visibility = View.VISIBLE
+        val stage1img : ImageView = findViewById(R.id.stage1Image)
+
+        val stage2img : ImageView = findViewById(R.id.stage2Image)
 
         // Finish delivery button
         val finishButton: Button = findViewById(R.id.finishButton)
@@ -90,6 +97,11 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "FETCHING")
                     editor.apply()
+                    deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
+
+                    originAddr = sharedPreferences.getString("originAddr", "").toString()
+                    instruction.text = originAddr
+                    deliveryStatus.text="Fetching"
                 }
                 "FETCHING" -> {
                     deliveryStatus.text = "In Delivery"
@@ -103,7 +115,6 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "SHIPPED")
                     editor.apply()
-
                 }
                 "SHIPPED" -> {
                     val editor = sharedPreferences.edit()
@@ -130,3 +141,4 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         }
     }
 }
+

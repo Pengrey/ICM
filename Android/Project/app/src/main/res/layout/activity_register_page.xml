@@ -52,7 +52,9 @@
         app:hintEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/textInputLayoutEmail"
         app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
-        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editName"
@@ -80,9 +82,11 @@
         app:boxStrokeColor="#26212E"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/textInputLayoutCID"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutCID"
         app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
-        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editEmailAddress"
@@ -97,14 +101,13 @@
             android:inputType="textEmailAddress"
             android:padding="20dp"
             android:textColor="@color/purple_200"
-            app:textInputLayoutFocusedRectEnabled="true"/>
+            app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCID"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/textfields"
         android:hint="@string/cid_number"
         android:textColorHint="@color/purple_200"
@@ -113,7 +116,9 @@
         app:hintEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/textInputLayout"
         app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
-        app:layout_constraintStart_toStartOf="@+id/RegisterButton">
+        app:layout_constraintStart_toStartOf="@+id/RegisterButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editCID"
@@ -135,7 +140,6 @@
         android:id="@+id/textInputLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/textfields"
         android:hint="@string/password"
         android:textColorHint="@color/purple_200"
@@ -145,8 +149,10 @@
         app:layout_constraintBottom_toTopOf="@+id/RegisterButton"
         app:layout_constraintEnd_toEndOf="@+id/RegisterButton"
         app:layout_constraintStart_toStartOf="@+id/RegisterButton"
+        app:layout_constraintTop_toTopOf="parent"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/purple_200">
+        app:passwordToggleTint="@color/purple_200"
+        app:layout_constraintVertical_bias="0.9">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editPassword"
@@ -163,5 +169,7 @@
             android:textColor="@color/purple_200"
             app:textInputLayoutFocusedRectEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
