@@ -60,12 +60,13 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_deliveries_tracking)
         // Shared Preferences
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         val riderId = sharedPreferences.getString("riderId", "").toString()
         val deliveryId = sharedPreferences.getString("deliveryId", "").toString()
-        var deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
-        var originAddr = sharedPreferences.getString("originAddr", "").toString()
+        val deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
+        val originAddr = sharedPreferences.getString("originAddr", "").toString()
 
-        val deliveryStage = sharedPreferences.getString("deliveryStage", "").toString()
+        var deliveryStage = sharedPreferences.getString("deliveryStage", "").toString()
 
         // Layout stuff
         val deliveryStatus: TextView = findViewById(R.id.deliveryStatus)
@@ -74,6 +75,9 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         val instructionLabel :TextView = findViewById(R.id.instructionLabel)
         val stage0img : ImageView = findViewById(R.id.stage0Image)
         stage0img.visibility = View.VISIBLE
+        instruction.visibility = View.VISIBLE
+        instruction.text = originAddr
+        deliveryStatus.text = "Fetching"
         val stage1img : ImageView = findViewById(R.id.stage1Image)
 
         val stage2img : ImageView = findViewById(R.id.stage2Image)
@@ -81,6 +85,12 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
         // Finish delivery button
         val finishButton: Button = findViewById(R.id.finishButton)
         //finishButton.background.colorFilter = BlendModeColorFilter(R.color.purple_700, BlendMode.HUE)
+
+        println(deliveryAddr)
+        println("WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        println(originAddr)
+        println(instruction.text)
+        println("SDFGSDFGDRGHDFGHDFGDFGHDFGHDFGh")
 
         finishButton.setOnClickListener {
             // Get Stage from API
@@ -91,21 +101,25 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "FETCHING")
                     editor.apply()
+                    deliveryStage = "FETCHING"
                 }
                 "BID_CHECK" -> {
                     doPostApi(deliveryId, riderId)
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "FETCHING")
                     editor.apply()
-                    deliveryAddr = sharedPreferences.getString("deliveryAddr", "").toString()
-
-                    originAddr = sharedPreferences.getString("originAddr", "").toString()
+                    deliveryStage = "FETCHING"
                     instruction.text = originAddr
-                    deliveryStatus.text="Fetching"
+                    instructionLabel.text = "Pick up at:"
+                    deliveryStatus.text="Picked Up"
+
+                    finishButton.text ="Pick up"
+                    stage0img.visibility = View.VISIBLE
+
                 }
                 "FETCHING" -> {
                     deliveryStatus.text = "In Delivery"
-
+                    deliveryStage = "SHIPPED"
                     finishButton.text = "Deliver"
                     //finishButton.background.colorFilter = BlendModeColorFilter(R.color.green, BlendMode.HUE)
                     tooltip.visibility = View.VISIBLE
@@ -114,23 +128,38 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     doPostApi(deliveryId, riderId)
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "SHIPPED")
+
                     editor.apply()
+                    stage0img.visibility = View.INVISIBLE
+                    stage1img.visibility = View.VISIBLE
                 }
                 "SHIPPED" -> {
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "DELIVERED")
                     editor.apply()
-                    deliveryStatus.text = "Finished"
-                    finishButton.text = "Go Back"
+                    deliveryStatus.text = "Arrived"
+                    finishButton.text = "Scan QR"
+                    stage2img.visibility = View.VISIBLE
+                    stage1img.visibility = View.INVISIBLE
+                    deliveryStage = "SCAN"
                     // finishButton.background.colorFilter = BlendModeColorFilter(R.color.blue, BlendMode.HUE)
                     tooltip.visibility = View.INVISIBLE
                     instruction.visibility = View.INVISIBLE
                     instructionLabel.visibility = View.INVISIBLE
+
+
+                }
+                "SCAN"->{
                     val intentIntegrator = IntentIntegrator(this)
                     intentIntegrator.setDesiredBarcodeFormats(listOf(IntentIntegrator.QR_CODE))
                     intentIntegrator.initiateScan()
+                    deliveryStage = "DELIVERED"
+                    deliveryStatus.text = "Completed"
+                    finishButton.text = "Go Back"
                 }
                 "DELIVERED" -> {
+
+
                     val editor = sharedPreferences.edit()
                     editor.putString("isAssigned", "false")
                     editor.putString("deliveryStage", "BID_CHECK")

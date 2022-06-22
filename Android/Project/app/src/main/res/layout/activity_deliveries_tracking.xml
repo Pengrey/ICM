@@ -103,8 +103,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.119"
-        tools:src="@drawable/pick_up"
-    tools:srcCompat="@drawable/pick_up" />
+        android:src="@drawable/pick_up"
+        tools:srcCompat="@drawable/pick_up" />
 
 
     <ImageView
@@ -118,9 +118,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.119"
-        tools:src="@drawable/female_bicycle_courier_5338323_4460057"
+        android:src="@drawable/female_bicycle_courier_5338323_4460057"
 
-    tools:srcCompat="@drawable/female_bicycle_courier_5338323_4460057" />
+        tools:srcCompat="@drawable/female_bicycle_courier_5338323_4460057" />
 
     <ImageView
         android:id="@+id/stage2Image"
@@ -133,6 +133,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.119"
-        tools:src="@drawable/man_scanning_qr_code_using_barcode_reader_4438777_3718505"
+        android:src="@drawable/man_scanning_qr_code_using_barcode_reader_4438777_3718505"
     tools:srcCompat="@drawable/man_scanning_qr_code_using_barcode_reader_4438777_3718505" />
 </androidx.constraintlayout.widget.ConstraintLayout>

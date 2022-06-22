@@ -36,7 +36,10 @@ class HomeAdapter(private val deliveries: ArrayList<Delivery>, private val start
                 endPoint.longitude = delivery.longitude
 
                 // Get distance and String
+                println(startPoint)
+                println(endPoint)
                 val distance: Int = (startPoint.distanceTo(endPoint)/1000).roundToInt()
+                println(distance)
                 val distanceStr = "$distance Km"
 
                 if (distance > 50){
