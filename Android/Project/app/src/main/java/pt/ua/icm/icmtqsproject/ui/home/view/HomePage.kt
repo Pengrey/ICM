@@ -98,12 +98,12 @@ class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
                         when (resource.status) {
                             Status.SUCCESS -> {
                                 println("SUCCESS")
-                                println("Data retrieved: " + resource.data)
-                                recyclerView.adapter = HomeAdapter(resource.data as ArrayList<Delivery>, startPoint,this)
+                                val toDeliver = resource.data?.filter { delivery -> delivery.deliveryState == "BID_CHECK" }
+                                recyclerView.adapter = HomeAdapter(toDeliver as ArrayList<Delivery>, startPoint,this)
                                 recyclerView.layoutManager = LinearLayoutManager(this)
                                 recyclerView.visibility = View.VISIBLE
                                 progressBar.visibility = View.GONE
-                                retrieveList(resource.data)
+                                retrieveList(toDeliver)
                             }
                             Status.ERROR -> {
                                 println("ERROR")
@@ -149,12 +149,15 @@ class HomePage : AppCompatActivity(),HomeAdapter.HomeAdapterCallback {
                                         // Set on preferences
                                         val editor = sharedPreferences.edit()
                                         editor.putString("isAssigned", "true")
-                                        val deliveryAssigned: Delivery? = resource.data.find { delivery -> delivery.riderId == sharedPreferences.getString("riderId", "")   }
+                                        val deliveryAssigned: Delivery? = resource.data.find { delivery -> delivery.riderId == sharedPreferences.getString("riderId", "") && delivery.deliveryState != "DELIVERED"  }
                                         if (deliveryAssigned != null) {
                                             editor.putString("deliveryId",deliveryAssigned.deliveryId.toString())
                                         }
                                         if (deliveryAssigned != null) {
-                                            editor.putString("deliveryAddr",deliveryAssigned.deliveryId.toString())
+                                            editor.putString("deliveryAddr",deliveryAssigned.deliveryAddr)
+                                        }
+                                        if (deliveryAssigned != null) {
+                                            editor.putString("deliveryAddr",deliveryAssigned.originAddr)
                                         }
                                         editor.apply()
 

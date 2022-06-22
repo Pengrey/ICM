@@ -100,7 +100,6 @@ class DeliveriesTrackingActivity : AppCompatActivity() {
                     instruction.text = deliveryAddr
                     instructionLabel.text = "Deliver to:"
                     doPostApi(deliveryId, riderId)
-                    doPostApi(deliveryId, riderId)
                     val editor = sharedPreferences.edit()
                     editor.putString("deliveryStage", "SHIPPED")
                     editor.apply()
